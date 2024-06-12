@@ -9,19 +9,20 @@ import AssistantHome from "./components/assistant/AssistantHome";
 
 function App() {
   return (
-    // <BrowserRouter>
-    //   <>
-    //     <Header />
-    //     <Container>
-    //       <Routes>
-    //         <Route path="/" element={<StudentHome />} />
-    //         <Route path="/assistant" element={<AssistantHome />} />
-    //       </Routes>
-    //     </Container>
-    //     <Footer />
-    //   </>
-    // </BrowserRouter>
-    <Footer />
+    <BrowserRouter>
+      <>
+        <div className="relative pt-16 overflow-hidden">
+          <Header />
+          <Container>
+            <Routes>
+              <Route path="/" element={<StudentHome />} />
+              <Route path="/assistant" element={<AssistantHome />} />
+            </Routes>
+          </Container>
+          <Footer />
+        </div>
+      </>
+    </BrowserRouter>
   );
 }
 

@@ -2,7 +2,7 @@
 function StudentHome() {
   return (
     <>
-      <div>
+      <div className="min-h-lvh ">
         <h1>content</h1>
       </div>
     </>
