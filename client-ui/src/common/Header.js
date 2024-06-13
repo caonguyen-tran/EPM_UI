@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaEnvira, FaReact } from "react-icons/fa6";
+import { FaEnvira, FaReact, FaRightFromBracket, FaAngleDown } from "react-icons/fa6";
 import {
   Menu,
   MenuButton,
@@ -30,8 +30,9 @@ function Header() {
       <div className="flex items-center justify-between">
         <Menu as="div" className="relative inline-block text-left">
           <div>
-            <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+            <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 items-center">
               Options
+              <FaAngleDown/>
             </MenuButton>
           </div>
 
@@ -91,10 +92,10 @@ function Header() {
                         type="submit"
                         className={classNames(
                           focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          "block w-full px-4 py-2 text-left text-sm"
+                          "w-full px-4 py-2 text-left text-sm flex justify-between items-center text-red-700"
                         )}
                       >
-                        Sign out
+                        Sign out<FaRightFromBracket className="text-red-700"/>
                       </button>
                     )}
                   </MenuItem>

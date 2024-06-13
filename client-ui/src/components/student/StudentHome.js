@@ -1,3 +1,8 @@
+import { Link } from "react-router-dom";
+import { FaCommentDots } from "react-icons/fa6";
+import { FaThumbsUp } from "react-icons/fa6";
+import { MdOutlineThumbUpOffAlt } from "react-icons/md";
+
 const data = {
   id: 4,
   name: 'TẬP HUẤN NCKH CHỦ ĐỀ "PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC"',
@@ -32,44 +37,62 @@ function StudentHome() {
   return (
     <div className="w-11/12 min-h-lvh bg-gray-200 m-auto flex flex-col justify-start items-center py-5 rounded-sm">
       <div class="px-5 py-4 bg-white shadow rounded-lg w-5/6">
-        <div class="flex mb-4">
-          <img
-            class="w-12 h-12 rounded-full"
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            alt="posts"
-          />
-          <div class="ml-2 mt-0.5">
-            <span class="block font-medium text-base leading-snug text-black dark:text-gray-100">
-              Loyce Kuvalis
-            </span>
-            <span class="block text-sm text-gray-500 dark:text-gray-400 font-light leading-snug">
-              16 December at 08:25
-            </span>
+        <div class="flex justify-between items-center">
+          <div class="flex mb-4">
+            <img
+              class="w-12 h-12 rounded-full"
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt="posts"
+            />
+            <div class="ml-2 mt-0.5">
+              <span class="block font-medium text-base leading-snug text-black dark:text-gray-100">
+                Loyce Kuvalis
+              </span>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 font-light leading-snug">
+                16 December at 08:25
+              </span>
+            </div>
+          </div>
+          <div>
+            <button className="bg-red-400 p-1 rounded-sm shadow font-semibold hover:bg-rose-300 text-gray-800 transition ease-in-out duration-150 px-2">
+              Đăng ký
+            </button>
           </div>
         </div>
+        <p class="size-12 w-auto h-auto font-semibold">{data.name}</p>
         <p class="text-gray-800 leading-snug md:leading-normal">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          {data.description}
         </p>
-        <div className="w-4/5 h-16 flex justify-start items-center bg-red-200 mb-2 px-2">
-          
+        <div className="w-4/5 h-20 grid grid-cols-3 auto-cols-min gap-2 mb-2 px-2">
+          <div className="bg-white h-8 w-auto border-2 border-gray-400 rounded-md text-center cursor-pointer">
+            <p className="font-light">{data.term.name}</p>
+          </div>
+          <div className="bg-white h-8 w-auto border-2 border-gray-400 rounded-md text-center cursor-pointer">
+            <p className="font-light">{data.faculty.name}</p>
+          </div>
+          <div className="bg-white h-8 w-auto border-2 border-gray-400 rounded-md text-center cursor-pointer">
+            <p className="font-light">{data.semester.name}</p>
+          </div>
+          <div className="bg-white h-8 w-auto border-2 border-gray-400 rounded-md text-center cursor-pointer">
+            <p className="font-light">{data.semester.yearStudy}</p>
+          </div>
         </div>
         <img src={data.image} alt="source_image" className="w-full" />
         <div className="w-10/11 h-0.5 bg-gray-300 mt-5"></div>
-        <div class="flex justify-between items-center mt-4">
-          <div class="flex ">
-            <span class="ml-1 text-gray-500 dark:text-gray-400  font-light">
+        <div class="flex justify-between items-center mt-4 mx-2">
+          <div class="flex justify-between items-center">
+            <MdOutlineThumbUpOffAlt />
+            <span class="ml-1 text-gray-500  font-light">
               8
             </span>
           </div>
-          <div class="ml-1 text-gray-500 dark:text-gray-400 font-light">
+          <div class="ml-1 text-gray-500 font-light">
             33 comments
           </div>
+        </div>
+        <div className="h-12 max-w-full mt-2 mx-1 flex justify-start items-center">
+          <button className="bg-gray-300 w-9 h-9 mr-4 rounded-full flex justify-center items-center"><FaThumbsUp /></button>
+          <Link className="bg-gray-300 w-28 h-8 rounded-md text-decoration-none flex justify-center items-center"><FaCommentDots className="mr-1" />Bình luận</Link>
         </div>
       </div>
     </div>
