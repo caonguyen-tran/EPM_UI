@@ -1,11 +1,14 @@
 import { useContext, useState } from "react";
 import { FaEnvira, FaReact } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import { UserContext } from "../../context/Context";
-import API, { endpoints } from "../../apis/API";
+import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
+import { DispatchContext, UserContext } from "../../context/Context";
+import API, { authApi, endpoints } from "../../apis/API";
+import cookies from "react-cookies";
 
 function Login() {
   const currentUser = useContext(UserContext);
+  const dispatch = useContext(DispatchContext);
+  const navigate = useNavigate();
 
   const [user, setUser] = useState({
     username: "",
@@ -19,15 +22,27 @@ function Login() {
   };
 
   const login = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    try{
-        let res = await API.post(endpoints['user-login'], user)
-        console.log(res.data)
+    try {
+      let res = await API.post(endpoints["user-login"], user);
+      cookies.save("token", res.data.result);
+
+      setTimeout(async () => {
+        let user = await authApi().get(endpoints["current-user"]);
+        dispatch({
+          type: "login",
+          payload: user.data,
+        });
+        navigate("/");
+      }, 200);
+    } catch (ex) {
+      console.log(ex);
     }
-    catch(ex){
-        console.log(ex)
-    }
+  };
+
+  if (currentUser !== null) {
+    return <Navigate to="/" />;
   }
 
   return (

@@ -13,7 +13,6 @@ import { DispatchReducer } from "./reducer/Reducers";
 
 function App() {
   const [user, dispatch] = useReducer(DispatchReducer, null);
-
   return (
     <BrowserRouter>
       <UserContext.Provider value={user}>

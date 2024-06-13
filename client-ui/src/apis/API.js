@@ -1,16 +1,17 @@
 import axios from "axios";
-
-const BASE_URL = "http://localhost:8085/EPMSpring/";
+import cookies from "react-cookies"
+const BASE_URL = "http://localhost:8080/EPMWebSpring/";
 
 export const endpoints = {
-    "user-login": "api/login"
+    "user-login": "api/user/login",
+    'current-user': "api/user/current-user"
 }
 
 export const authApi = () => {
     return axios.create({
         baseURL: BASE_URL,
         headers: {
-            "Authorization": ""
+            "Authorization": cookies.load('token')
         }
     })
 }

@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { FaCommentDots } from "react-icons/fa6";
 import { FaThumbsUp } from "react-icons/fa6";
 import { MdOutlineThumbUpOffAlt } from "react-icons/md";
+import { useContext, useEffect } from "react";
+import { UserContext } from "../../context/Context";
 
 const data = {
   id: 4,
