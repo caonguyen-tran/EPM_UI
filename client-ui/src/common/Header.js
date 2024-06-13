@@ -5,9 +5,6 @@ import {
   MenuButton,
   MenuItem,
   MenuItems,
-  Popover,
-  PopoverButton,
-  PopoverPanel,
   Transition,
 } from "@headlessui/react";
 function classNames(...classes) {
