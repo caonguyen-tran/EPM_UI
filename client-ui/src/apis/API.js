@@ -3,8 +3,8 @@ import cookies from "react-cookies"
 const BASE_URL = "http://localhost:8080/EPMWebSpring/";
 
 export const endpoints = {
-    "user-login": "api/user/login",
-    'current-user': "api/user/current-user"
+    "user-login": "api/user/login/",
+    'current-user': "api/user/current-user/"
 }
 
 export const authApi = () => {

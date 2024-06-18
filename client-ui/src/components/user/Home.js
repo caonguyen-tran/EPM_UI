@@ -35,7 +35,7 @@ const data = {
   },
 };
 
-function StudentHome() {
+function Home() {
   return (
     <div className="w-11/12 min-h-lvh bg-gray-200 m-auto flex flex-col justify-start items-center py-5 rounded-sm">
       <div class="px-5 py-4 bg-white shadow rounded-lg w-5/6">
@@ -56,9 +56,9 @@ function StudentHome() {
             </div>
           </div>
           <div>
-            <button className="bg-red-400 p-1 rounded-sm shadow font-semibold hover:bg-rose-300 text-gray-800 transition ease-in-out duration-150 px-2">
-              Đăng ký
-            </button>
+            <Link to="/activity-detail" className="text-decoration-none bg-rose-300 p-1 rounded-sm shadow font-semibold hover:bg-red-400 text-gray-800 transition ease-in-out duration-150 px-2">
+              Xem chi tiết
+            </Link>
           </div>
         </div>
         <p class="size-12 w-auto h-auto font-semibold">{data.name}</p>
@@ -94,11 +94,11 @@ function StudentHome() {
         </div>
         <div className="h-12 max-w-full mt-2 mx-1 flex justify-start items-center">
           <button className="bg-gray-300 w-9 h-9 mr-4 rounded-full flex justify-center items-center"><FaThumbsUp /></button>
-          <Link className="bg-gray-300 w-28 h-8 rounded-md text-decoration-none flex justify-center items-center"><FaCommentDots className="mr-1" />Bình luận</Link>
+          <Link className="bg-gray-300 px-2 h-8 rounded-md text-decoration-none flex justify-center items-center"><FaCommentDots className="mr-1" />Xem bình luận</Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default StudentHome;
+export default Home;

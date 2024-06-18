@@ -1,14 +1,17 @@
 import { useContext, useState } from "react";
 import { FaEnvira, FaReact } from "react-icons/fa6";
-import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { DispatchContext, UserContext } from "../../context/Context";
 import API, { authApi, endpoints } from "../../apis/API";
 import cookies from "react-cookies";
+import Loading from "../../common/Loading";
+import { RESPONSE_STATUS } from "../../configs/Constant";
 
 function Login() {
   const currentUser = useContext(UserContext);
   const dispatch = useContext(DispatchContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const [user, setUser] = useState({
     username: "",
@@ -23,25 +26,32 @@ function Login() {
 
   const login = async (e) => {
     e.preventDefault();
-
-    try {
-      let res = await API.post(endpoints["user-login"], user);
+    setLoading(true);
+    let res = await API.post(endpoints["user-login"], user);
+    console.log(res.data);
+    let status = res.data.status;
+    if (status !== "FAIL") {
       cookies.save("token", res.data.result);
-
       setTimeout(async () => {
-        let user = await authApi().get(endpoints["current-user"]);
-        dispatch({
-          type: "login",
-          payload: user.data,
-        });
-        navigate("/");
+        try {
+          let user = await authApi().get(endpoints["current-user"]);
+          dispatch({
+            type: "login",
+            payload: user.data.result,
+          });
+          navigate("/");
+        } catch (ex) {
+          alert("catch in");
+        }
       }, 200);
-    } catch (ex) {
-      console.log(ex);
+    } else {
+      setLoading(false);
+      alert("Loi dang nhap");
     }
   };
 
   if (currentUser !== null) {
+    console.log(currentUser);
     return <Navigate to="/" />;
   }
 
@@ -117,13 +127,19 @@ function Login() {
           </div>
 
           <div>
-            <button
-              type="submit"
-              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={login}
-            >
-              Sign in
-            </button>
+            {loading ? (
+              <div className="flex w-full justify-center rounded-md  px-3 py-1.5 text-sm font-semibold leading-6 text-white">
+                <Loading size={30} />
+              </div>
+            ) : (
+              <button
+                type="submit"
+                class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={login}
+              >
+                Sign in
+              </button>
+            )}
           </div>
         </form>
       </div>
