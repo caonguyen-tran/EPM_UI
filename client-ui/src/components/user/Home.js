@@ -2,8 +2,6 @@ import { Link } from "react-router-dom";
 import { FaCommentDots } from "react-icons/fa6";
 import { FaThumbsUp } from "react-icons/fa6";
 import { MdOutlineThumbUpOffAlt } from "react-icons/md";
-import { useContext, useEffect } from "react";
-import { UserContext } from "../../context/Context";
 
 const data = {
   id: 4,
@@ -56,7 +54,7 @@ function Home() {
             </div>
           </div>
           <div>
-            <Link to="/activity-detail" className="text-decoration-none bg-rose-300 p-1 rounded-sm shadow font-semibold hover:bg-red-400 text-gray-800 transition ease-in-out duration-150 px-2">
+            <Link to="/activity-detail" className="text-decoration-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center mt-4">
               Xem chi tiết
             </Link>
           </div>

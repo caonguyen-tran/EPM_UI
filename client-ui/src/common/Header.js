@@ -36,7 +36,7 @@ function Header() {
   };
 
   return (
-    <div className="h-14 max-w-full bg-black fixed top-0 left-0 right-0 bg-opacity-50 backdrop-blur shadow-xl flex justify-between items-center px-4">
+    <div className="h-14 max-w-full bg-black fixed top-0 left-0 right-0 bg-opacity-50 backdrop-blur shadow-xl flex justify-between items-center px-4 z-30">
       <div className="flex justify-between items-center">
         <div className="flex justify-between items-center">
           <FaEnvira className="size-10 bg-green-400" />
@@ -51,7 +51,7 @@ function Header() {
             Trang chủ
           </Link>
           <Link
-            to="/"
+            to="/register"
             className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
           >
             Đăng ký hoạt động
@@ -63,7 +63,7 @@ function Header() {
             Đang diễn ra
           </Link>
           <Link
-            to="/"
+            to="/joined"
             className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
           >
             Dashboard

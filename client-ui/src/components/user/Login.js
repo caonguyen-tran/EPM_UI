@@ -5,7 +5,6 @@ import { DispatchContext, UserContext } from "../../context/Context";
 import API, { authApi, endpoints } from "../../apis/API";
 import cookies from "react-cookies";
 import Loading from "../../common/Loading";
-import { RESPONSE_STATUS } from "../../configs/Constant";
 
 function Login() {
   const currentUser = useContext(UserContext);

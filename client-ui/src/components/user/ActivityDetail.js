@@ -1,8 +1,9 @@
-import { FaCommentDots, FaThumbsUp } from "react-icons/fa6";
+
 import { MdOutlineThumbUpOffAlt } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ActivityDetail = () => {
+  const navigator = useNavigate()
   const data = {
     id: 4,
     name: 'TẬP HUẤN NCKH CHỦ ĐỀ "PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC"',
@@ -47,6 +48,10 @@ const ActivityDetail = () => {
     let datetime = new Date(timestamp);
     return datetime;
   };
+
+  const registerSubmit = () => {
+    navigator("/register")
+  }
   return (
     <div className="w-11/12 min-h-lvh bg-gray-200 m-auto flex flex-col justify-start items-center py-5 rounded-sm">
       <div class="px-5 py-4 bg-white shadow rounded-lg w-5/6">
@@ -86,7 +91,7 @@ const ActivityDetail = () => {
               {data.term.name}
             </div>
           </div>
-          <div className="flex justify-start items-center mb-2 w-full">
+          <div className="flex justify-start items-center my-2 w-full">
             <div className="font-semibold mr-1.5 min-w-32">Ngày bắt đầu: </div>
             <div className="flex justify-center items-center p-1">
               <div class="relative max-w-sm">
@@ -136,6 +141,28 @@ const ActivityDetail = () => {
               </div>
             </div>
           </div>
+          <button
+            onClick={registerSubmit}
+            type="button"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mt-4 "
+          >
+            Xác nhận đăng ký
+            <svg
+              class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+          </button>
         </div>
 
         <div className="w-10/11 h-0.5 bg-gray-300 mt-5"></div>
@@ -145,15 +172,6 @@ const ActivityDetail = () => {
             <span class="ml-1 text-gray-500  font-light">8</span>
           </div>
           <div class="ml-1 text-gray-500 font-light">33 comments</div>
-        </div>
-        <div className="h-12 max-w-full mt-2 mx-1 flex justify-start items-center">
-          <button className="bg-gray-300 w-9 h-9 mr-4 rounded-full flex justify-center items-center">
-            <FaThumbsUp />
-          </button>
-          <Link className="bg-gray-300 w-28 h-8 rounded-md text-decoration-none flex justify-center items-center">
-            <FaCommentDots className="mr-1" />
-            Bình luận
-          </Link>
         </div>
       </div>
     </div>
