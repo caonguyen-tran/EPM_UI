@@ -1,10 +1,3 @@
-import { Link, useNavigate } from "react-router-dom";
-import {
-  FaEnvira,
-  FaReact,
-  FaRightFromBracket,
-  FaAngleDown,
-} from "react-icons/fa6";
 import {
   Menu,
   MenuButton,
@@ -13,9 +6,16 @@ import {
   Transition,
 } from "@headlessui/react";
 import { useContext } from "react";
-import { DispatchContext, UserContext } from "../context/Context";
 import cookie from "react-cookies";
+import {
+  FaAngleDown,
+  FaEnvira,
+  FaReact,
+  FaRightFromBracket,
+} from "react-icons/fa6";
+import { Link, useNavigate } from "react-router-dom";
 import { ROLE } from "../configs/Constant";
+import { DispatchContext, UserContext } from "../context/Context";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -67,6 +67,12 @@ function Header() {
             className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
           >
             Dashboard
+          </Link>
+          <Link
+            to="/assistant"
+            className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
+          >
+            Trang trợ lý sinh viên
           </Link>
         </div>
       </div>
