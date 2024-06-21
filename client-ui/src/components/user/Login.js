@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
+import cookies from "react-cookies";
 import { FaEnvira, FaReact } from "react-icons/fa6";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { DispatchContext, UserContext } from "../../context/Context";
 import API, { authApi, endpoints } from "../../apis/API";
-import cookies from "react-cookies";
 import Loading from "../../common/Loading";
+import { DispatchContext, UserContext } from "../../context/Context";
 
 function Login() {
   const currentUser = useContext(UserContext);
