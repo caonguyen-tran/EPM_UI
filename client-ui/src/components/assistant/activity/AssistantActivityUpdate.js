@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Loading from "../../common/Loading";
+import Loading from "../../../common/Loading";
 
 const AssistantActivityUpdate = () => {
 
