@@ -41,7 +41,7 @@ function App() {
                     <Route path="activity/create" element={<AssistanActivityForm />}/>
                 </Route>
                 <Route path="" element={<Home />} />
-                <Route path="/activity-detail" element={<ActivityDetail />} />
+                <Route path="/activity-detail/:id" element={<ActivityDetail />} />
                 <Route path="/register" element={<RegisterSite />} />
                 <Route path="/joined" element={<Joined />} />
                 <Route path="/test" element={<Test />} />

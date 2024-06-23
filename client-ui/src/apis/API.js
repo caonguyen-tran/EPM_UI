@@ -1,6 +1,6 @@
 import axios from "axios";
 import cookies from "react-cookies";
-const BASE_URL = "http://localhost:8080/EPMWebSpring/";
+const BASE_URL = "http://34.47.125.99:8080/EPMWebSpring-1.0-SNAPSHOT/";
 
 export const endpoints = {
     "user-login": "api/user/login/",

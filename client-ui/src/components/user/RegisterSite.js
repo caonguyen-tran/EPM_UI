@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { getDatetimeDetail } from "../../utils/Common";
 
 const data = {
   code: 1000,
@@ -176,10 +177,6 @@ const data = {
 
 const process = data.result;
 const RegisterSite = () => {
-  const convertTimestampToDatetime = (timestamp) => {
-    let datetime = new Date(timestamp)
-    return `${datetime.getDate()}/${datetime.getMonth()}/${datetime.getFullYear()} - ${datetime.getHours()}:${datetime.getMinutes()}` 
-  };
   return (
     <>
       <figure class="max-w-screen-md mx-auto text-center py-2">
@@ -252,11 +249,11 @@ const RegisterSite = () => {
                 >
                   {element[0].id}
                 </th>
-                <td class="px-6 py-4">{convertTimestampToDatetime(element[0].dateRegister)}</td>
+                <td class="px-6 py-4">{getDatetimeDetail(element[0].dateRegister)}</td>
                 <td class="px-6 py-4">{element[2].name}</td>
-                <td class="px-6 py-4">{convertTimestampToDatetime(element[2].startDate)}</td>
+                <td class="px-6 py-4">{getDatetimeDetail(element[2].startDate)}</td>
                 <td class="px-6 py-4">
-                  {convertTimestampToDatetime(element[2].endDate)}
+                  {getDatetimeDetail(element[2].endDate)}
                 </td>
                 <td class="px-6 py-4 text-center">{element[2].slots}</td>
                 <td class="px-6 py-4">{element[3].name}</td>

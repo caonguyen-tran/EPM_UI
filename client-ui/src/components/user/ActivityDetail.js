@@ -1,9 +1,13 @@
-
 import { MdOutlineThumbUpOffAlt } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { FaEllipsisH, FaShare } from "react-icons/fa";
+import { convertTimestampToDatetime } from "../../utils/Common";
+import { useEffect, useState } from "react";
+import API, { authApi, endpoints } from "../../apis/API";
+import ContentLoading from "./../../common/ContentLoading";
 
 const ActivityDetail = () => {
-  const navigator = useNavigate()
+  const navigator = useNavigate();
   const data = {
     id: 4,
     name: 'TẬP HUẤN NCKH CHỦ ĐỀ "PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC"',
@@ -44,17 +48,21 @@ const ActivityDetail = () => {
       },
     },
   };
-  const convertTimestampToDateTime = (timestamp) => {
-    let datetime = new Date(timestamp);
-    return datetime;
-  };
 
   const registerSubmit = () => {
-    navigator("/register")
-  }
+    navigator("/register");
+  };
   return (
     <div className="w-11/12 min-h-lvh bg-gray-200 m-auto flex flex-col justify-start items-center py-5 rounded-sm">
       <div class="px-5 py-4 bg-white shadow rounded-lg w-5/6">
+        <div className="flex justify-end items-center w-full mb-4">
+          <button>
+            <FaShare size={20} />
+          </button>
+          <button className="ml-3">
+            <FaEllipsisH  size={20} />
+          </button>
+        </div>
         <img src={data.image} alt="source_image" className="w-full mb-4" />
         <p class="size-12 w-auto h-auto font-bold text-xl">{data.name}</p>
         <p class="text-gray-800 leading-snug md:leading-normal">
@@ -110,7 +118,7 @@ const ActivityDetail = () => {
                   type="text"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 min-w-96"
                   placeholder="Select date"
-                  value={convertTimestampToDateTime(data.startDate)}
+                  value={convertTimestampToDatetime(data.startDate)}
                   disabled
                 />
               </div>
@@ -135,7 +143,7 @@ const ActivityDetail = () => {
                   type="text"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 min-w-96"
                   placeholder="Select date"
-                  value={convertTimestampToDateTime(data.endDate)}
+                  value={convertTimestampToDatetime(data.endDate)}
                   disabled
                 />
               </div>
