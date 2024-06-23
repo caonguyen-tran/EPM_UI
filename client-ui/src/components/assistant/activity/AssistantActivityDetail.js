@@ -71,7 +71,7 @@ const AssistantActivityDetail = () => {
     }
 
     const update = () => {
-        nav('update')
+        nav('/assistant/activity/detail/1/update')
     }
 
     const deleteActivity = () => {

@@ -32,7 +32,7 @@ export const endpoints = {
     'scoreByTerm': 'api/score/scores-by-term',
     'totalScoreByTerm': 'api/score/total-scores-by-term',
     'acceptScoreStudent': 'api/score-student/accept',
-    'uploadCsvRollup': 'api/score-student/upload-csv',
+    'uploadCsvRollup': (activityId) => `api/score-student/upload-csv?${activityId}`,
     'userScore': (userId) => `api/score-student/scores/${userId}`,
     'statisticByClass': (classId) => `api/statistics/class/${classId}/achievements`
 }

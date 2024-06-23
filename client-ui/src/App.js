@@ -5,11 +5,18 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Footer from "./common/Footer";
 import Header from "./common/Header";
-import AssistantActivityDetail from "./components/assistant/AssistantActivityDetail";
-import AssistanActivityForm from "./components/assistant/AssistantActivityForm";
-import AssistantActivityList from "./components/assistant/AssistantActivityList";
-import AssistantActivityUpdate from "./components/assistant/AssistantActivityUpdate";
 import AssistantHome from "./components/assistant/AssistantHome";
+import Class from "./components/assistant/Class";
+import AssistantActivityDetail from "./components/assistant/activity/AssistantActivityDetail";
+import AssistanActivityForm from "./components/assistant/activity/AssistantActivityForm";
+import AssistantActivityList from "./components/assistant/activity/AssistantActivityList";
+import AssistantActivityUpdate from "./components/assistant/activity/AssistantActivityUpdate";
+import MissingReportDetail from "./components/assistant/missingreport/MissingReportDetail";
+import MissingReportList from "./components/assistant/missingreport/MissingReportList";
+import TestSelectSemester from "./components/assistant/missingreport/TestSelectSemester";
+import UploadCSV from "./components/assistant/scorestudent/UploadCSV";
+import StudentAchievement from "./components/assistant/student/StudentAchievement";
+import StudentList from "./components/assistant/student/StudentList";
 import ActivityDetail from "./components/user/ActivityDetail";
 import Home from "./components/user/Home";
 import Joined from "./components/user/Joined";
@@ -38,7 +45,13 @@ function App() {
                     <Route path="activity/list" element={<AssistantActivityList />} />
                     <Route path="activity/detail/:id" element={<AssistantActivityDetail />} />
                     <Route path="activity/detail/:id/update" element={<AssistantActivityUpdate />}/>
-                    <Route path="activity/create" element={<AssistanActivityForm />}/>
+                    <Route path="activity/create" element={<AssistanActivityForm/>}/>
+                    <Route path="missing-report/list" element={<MissingReportList/>}/>
+                    <Route path="missing-report/detail/:id" element={<MissingReportDetail/>}/>
+                    <Route path="score-student/upload-csv" element={<UploadCSV/>}/>
+                    <Route path="class" element={<Class/>}/>
+                    <Route path="class/1" element={<StudentList/>}/>
+                    <Route path="class/1/student/1" element={<StudentAchievement/>}/>
                 </Route>
                 <Route path="" element={<Home />} />
                 <Route path="/activity-detail/:id" element={<ActivityDetail />} />
@@ -47,6 +60,7 @@ function App() {
                 <Route path="/test" element={<Test />} />
                 <Route path="/user-register" element={<Register />} />
                 <Route path="/verify" element={<Verify />} />
+                <Route path="/testss" element={<TestSelectSemester />} />
               </Routes>
             </Container>
             <Footer />
