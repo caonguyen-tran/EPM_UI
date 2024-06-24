@@ -1,7 +1,8 @@
 import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
-import React from 'react';
+import React, { useState } from 'react';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
+import { getDatetimeDetail } from '../../../utils/Common';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -181,10 +182,6 @@ const ScoreChart = () => {
     return { barData, doughnutData };
 }
 
-const convertTimestampToDatetime = (timestamp) => {
-    let datetime = new Date(timestamp)
-    return `${datetime.getDate()}/${datetime.getMonth() + 1}/${datetime.getFullYear()} - ${datetime.getHours()}:${datetime.getMinutes()}`
-};
 
 const determineAchievement = (totalScore) => {
     if (totalScore >= 90) {
@@ -204,8 +201,11 @@ const determineAchievement = (totalScore) => {
 
 const achievement = determineAchievement(totalScore.overallTotalScore);
 
+
+
 const StudentAchievement = () => {
     const { barData, doughnutData } = ScoreChart();
+    const [showStatistics, setShowStatistics] = useState(false);
 
     return (
         <>
@@ -244,7 +244,7 @@ const StudentAchievement = () => {
                                 </th>
                                 <td className="px-6 py-4">{element[1].description}</td>
                                 <td className="px-6 py-4">{element[2].name}</td>
-                                <td className="px-6 py-4">{convertTimestampToDatetime(element[3].dateRegister)}</td>
+                                <td className="px-6 py-4">{getDatetimeDetail(element[3].dateRegister)}</td>
                                 <td className="px-6 py-4">
                                     <Link
                                         to="/assistant/class/1/student/1/join-activity/1/scores"
@@ -264,15 +264,37 @@ const StudentAchievement = () => {
                 </span>
             </div>
             <div>
-                <h2 className="text-2xl font-bold mb-4">Biểu đồ thống kê điểm theo từng điều</h2>
-                <div className="mb-8">
-                    <Bar data={barData} options={{ responsive: true, plugins: { legend: { display: true, position: 'top' }, title: { display: true, text: 'Total Score per Term' } } }} width='20' height='10' />
-                </div>
-                <div className="mb-8">
-                    <Doughnut data={doughnutData} options={{ responsive: true, plugins: { legend: { display: true, position: 'top' }, title: { display: true, text: 'Total Score per Term' } } }}width='20' height='10' />
-                </div>
-                <div>
-                    <h3 className="text-xl font-bold">Tổng điểm: {totalScore.overallTotalScore}</h3>
+                <div className="container mx-auto px-4">
+                    <div className="mt-6 space-y-4">
+                        <button
+                            onClick={() => setShowStatistics(!showStatistics)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                        >
+                            {showStatistics ? 'Ẩn thống kê' : 'Hiện thống kê'}
+                        </button>
+                    </div>
+                    {showStatistics && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mt-20 relative">
+                                <button
+                                    onClick={() => setShowStatistics(false)}
+                                    className="absolute top-4 right-4 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                                >
+                                    &times;
+                                </button>
+                                <h2 className="text-2xl font-bold mb-4">Biểu đồ thống kê điểm theo từng điều</h2>
+                                <div className="mb-8">
+                                    <Bar data={barData} options={{ responsive: true, plugins: { legend: { display: true, position: 'top' }, title: { display: true, text: 'Total Score per Term' } } }} width={300} height={150} />
+                                </div>
+                                <div className="mb-8">
+                                    <Doughnut data={doughnutData} options={{ responsive: true, plugins: { legend: { display: true, position: 'top' }, title: { display: true, text: 'Total Score per Term' } } }} width={300} height={150} />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold">Tổng điểm: {totalScore.overallTotalScore}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

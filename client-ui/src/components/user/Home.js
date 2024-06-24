@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
-import { FaCommentDots } from "react-icons/fa6";
-import { FaThumbsUp } from "react-icons/fa6";
-import { MdOutlineThumbUpOffAlt } from "react-icons/md";
 import { useEffect, useState } from "react";
+import { FaCommentDots, FaThumbsUp } from "react-icons/fa6";
+import { MdOutlineThumbUpOffAlt } from "react-icons/md";
+import { Link } from "react-router-dom";
 import API, { endpoints } from "../../apis/API";
 import ContentLoading from "./../../common/ContentLoading";
 
@@ -14,7 +13,7 @@ function Home() {
     const fetchData = async () => {
       setLoading(true)
       try {
-        let res = await API.get(endpoints["activities"]);
+        let res = await API.get(endpoints['activities']);
         setActivity(res.data);
       } catch (ex) {
         console.log(ex);

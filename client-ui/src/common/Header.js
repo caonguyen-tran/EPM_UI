@@ -5,7 +5,7 @@ import {
   MenuItems,
   Transition,
 } from "@headlessui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import cookie from "react-cookies";
 import {
   FaAngleDown,
@@ -34,6 +34,12 @@ function Header() {
       navigate("/login");
     }, 200);
   };
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => {
+    setIsOpen(!isOpen);
+  }
+
 
   return (
     <div className="h-14 max-w-full bg-black fixed top-0 left-0 right-0 bg-opacity-50 backdrop-blur shadow-xl flex justify-between items-center px-4 z-30">
@@ -68,12 +74,43 @@ function Header() {
           >
             Dashboard
           </Link>
-          <Link
-            to="/assistant"
-            className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
-          >
-            Trang trợ lý sinh viên
-          </Link>
+            <div
+              className="relative inline-block text-left"
+              onClick = {toggle}
+            >
+              <button
+                className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5 px-4 py-2"
+              >
+                Trang trợ lý sinh viên
+              </button>
+              {isOpen && (
+                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <Link
+                      to="/assistant/activity/list"
+                      className="text-decoration-none block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      Danh sách hoạt động
+                    </Link>
+                    <Link
+                      to="/assistant/missing-report/list"
+                      className="text-decoration-none block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      Danh sách báo thiếu
+                    </Link>
+                    <Link
+                      to="/assistant/class"
+                      className="text-decoration-none block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      role="menuitem"
+                    >
+                      Danh sách lớp
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
         </div>
       </div>
 
