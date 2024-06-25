@@ -1,4 +1,5 @@
-import FilterComponent from "../common/FilterComponent";
+import FilterComponent from "../../../common/FilterComponent";
+
 
 const TestSelectSemester = () => {
     const handleFilter = (semesterId, yearId) => {

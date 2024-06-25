@@ -43,47 +43,48 @@ const MissingReportDetail = () => {
     }
 
 
-    return (<div className="container mx-auto mt-4 p-4">
-        <div className="bg-white shadow-md rounded-lg p-6">
-            <h1 className="text-3xl font-bold text-gray-800">{data[1].name}</h1>
-            <p className="text-lg font-semibold text-gray-600">Proof Joining: <span className="font-normal"></span></p>
-            <img
-                src={data[0].proofJoining}
-                className="w-full h-64 object-cover mt-4 rounded-md shadow-sm"
-            />
-            <div className="mt-4">
-                <p className="text-lg font-semibold text-gray-600">Status: <span className="font-normal">{data[0].status}</span></p>
-                <p className="text-lg font-semibold text-gray-600">
-                    Created Date:{" "}
-                    <span className="font-normal">
-                        {convertTimestampToDatetime(data[0].createdDate)}
-                    </span>
-                </p>
-                <p className="text-lg font-semibold text-gray-600">Note: <span className="font-normal">{data[0].note}</span></p>
-                <p className="text-lg font-semibold text-gray-600">Mô tả hoạt động: <span className="font-normal">{data[1].description}</span></p>
-                <p className="text-lg font-semibold text-gray-600">
-                    Hoạt động bắt đầu từ:{" "}
-                    <span className="font-normal">
-                        {convertTimestampToDatetime(data[1].startDate)}
-                    </span>
-                </p>
-                <p className="text-lg font-semibold text-gray-600">
-                    Hoạt động kết thúc lúc:{" "}
-                    <span className="font-normal">
-                        {convertTimestampToDatetime(data[1].endDate)}
-                    </span>
-                </p>
-                <p className="text-lg font-semibold text-gray-600">Hình ảnh hoạt động: <span className="font-normal"></span></p>
+    return (
+        <div className="container mx-auto mt-4 p-4">
+            <div className="bg-white shadow-md rounded-lg p-6">
+                <h1 className="text-3xl font-bold text-gray-800">{data[1].name}</h1>
+                <p className="text-lg font-semibold text-gray-600">Proof Joining: <span className="font-normal"></span></p>
                 <img
-                    src={data[1].image}
+                    src={data[0].proofJoining}
                     className="w-full h-64 object-cover mt-4 rounded-md shadow-sm"
                 />
+                <div className="mt-4">
+                    <p className="text-lg font-semibold text-gray-600">Status: <span className="font-normal">{data[0].status}</span></p>
+                    <p className="text-lg font-semibold text-gray-600">
+                        Created Date:{" "}
+                        <span className="font-normal">
+                            {convertTimestampToDatetime(data[0].createdDate)}
+                        </span>
+                    </p>
+                    <p className="text-lg font-semibold text-gray-600">Note: <span className="font-normal">{data[0].note}</span></p>
+                    <p className="text-lg font-semibold text-gray-600">Mô tả hoạt động: <span className="font-normal">{data[1].description}</span></p>
+                    <p className="text-lg font-semibold text-gray-600">
+                        Hoạt động bắt đầu từ:{" "}
+                        <span className="font-normal">
+                            {convertTimestampToDatetime(data[1].startDate)}
+                        </span>
+                    </p>
+                    <p className="text-lg font-semibold text-gray-600">
+                        Hoạt động kết thúc lúc:{" "}
+                        <span className="font-normal">
+                            {convertTimestampToDatetime(data[1].endDate)}
+                        </span>
+                    </p>
+                    <p className="text-lg font-semibold text-gray-600">Hình ảnh hoạt động: <span className="font-normal"></span></p>
+                    <img
+                        src={data[1].image}
+                        className="w-full h-64 object-cover mt-4 rounded-md shadow-sm"
+                    />
+                </div>
             </div>
-        </div>
-        <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onClick={accept}>Chấp nhận báo thiếu</button>
-        <button className="bg-white border border-gray-300 hover:border-gray-400 text-red-800 font-bold py-2 px-4 rounded inline-flex items-center" onClick={reject}>Từ chối báo thiếu</button>
+            <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onClick={accept}>Chấp nhận báo thiếu</button>
+            <button className="bg-white border border-gray-300 hover:border-gray-400 text-red-800 font-bold py-2 px-4 rounded inline-flex items-center" onClick={reject}>Từ chối báo thiếu</button>
 
-    </div>
+        </div>
     );
 }
 

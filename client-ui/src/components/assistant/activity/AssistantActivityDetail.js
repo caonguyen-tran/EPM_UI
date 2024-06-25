@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getDatetimeDetail } from "../../../utils/Common";
+import UploadCSV from "../scorestudent/UploadCSV";
 // import { useParams } from "react-router-dom";
 // import API, { endpoints } from "../../apis/API";
 
@@ -39,10 +41,7 @@ const AssistantActivityDetail = () => {
         }
     ]);
 
-    const convertTimestampToDateTime = (timestamp) => {
-        const date = new Date(timestamp);
-        return date.toLocaleDateString();
-    };
+
     // useEffect(() => {
     //     const fetchActivity = async () => {
     //         try {
@@ -91,13 +90,13 @@ const AssistantActivityDetail = () => {
                     <p className="text-lg font-semibold text-gray-600">
                         Start Date:{" "}
                         <span className="font-normal">
-                            {convertTimestampToDateTime(activity.startDate)}
+                            {getDatetimeDetail(activity.startDate)}
                         </span>
                     </p>
                     <p className="text-lg font-semibold text-gray-600">
                         End Date:{" "}
                         <span className="font-normal">
-                            {convertTimestampToDateTime(activity.endDate)}
+                            {getDatetimeDetail(activity.endDate)}
                         </span>
                     </p>
                     <p className="text-lg font-semibold text-gray-600">Description: <span className="font-normal">{activity.description}</span></p>
@@ -109,7 +108,10 @@ const AssistantActivityDetail = () => {
             </div>
             <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onClick={update}>Chỉnh sửa hoạt động</button>
             <button className="bg-white border border-gray-300 hover:border-gray-400 text-red-800 font-bold py-2 px-4 rounded inline-flex items-center" onClick={deleteActivity}>Xóa hoạt động</button>
-
+            <div className="mt-6 bg-gray-100 border border-gray-300 rounded-md p-4">
+                <h3 className="text-lg font-semibold mb-2">Nạp tệp tin CSV để điểm danh:</h3>
+                <UploadCSV />
+            </div>
         </div>
     );
 };

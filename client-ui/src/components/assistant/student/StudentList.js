@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { getDatetimeDetail } from "../../../utils/Common";
 
 const StudentList = () => {
     const classes = "DH21CS01";
@@ -70,11 +71,6 @@ const StudentList = () => {
         ]
     ]
 
-    const convertTimestampToDatetime = (timestamp) => {
-        let datetime = new Date(timestamp)
-        return `${datetime.getDate()}/${datetime.getMonth()}/${datetime.getFullYear()}`
-    };
-
     return (
         <>
             <div className="bg-blue-100 text-gray-700 text-center py-4 rounded-lg shadow mb-6">
@@ -121,7 +117,7 @@ const StudentList = () => {
                                 </th>
                                 <td class="px-6 py-4">{element[0].lastname} {element[0].firstname}</td>
                                 <td class="px-6 py-4">{element[0].gender}</td>
-                                <td class="px-6 py-4">{convertTimestampToDatetime(element[0].dayOfBirth)}</td>
+                                <td class="px-6 py-4">{getDatetimeDetail(element[0].dayOfBirth)}</td>
                                 <td className="px-6 py-4">{element[0].phoneNumber}</td>
                                 <td className="px-6 py-4">{element[0].address}</td>
                                 <td className="px-6 py-4">{element[0].email}</td>
