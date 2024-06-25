@@ -50,30 +50,6 @@ function Header() {
           >
             Trang chủ
           </Link>
-          <Link
-            to="/register"
-            className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
-          >
-            Đăng ký hoạt động
-          </Link>
-          <Link
-            to="/"
-            className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
-          >
-            Đang diễn ra
-          </Link>
-          <Link
-            to="/joined"
-            className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
-          >
-            Dashboard
-          </Link>
-          <Link
-            to="/assistant"
-            className="text-decoration-none text-base text-white font-medium hover:scale-x-110 hover:bg-gray-700 rounded-md transition ease-in-out duration-200 mx-3.5"
-          >
-            Trang trợ lý sinh viên
-          </Link>
         </div>
       </div>
 
@@ -111,75 +87,71 @@ function Header() {
                     )}
                   </MenuItem>
                   {currentUser.userRole.userRole === ROLE.STUDENT ? (
-                    <MenuItem>
-                      {({ focus }) => (
-                        <Link
-                          to="/assistant"
-                          className={classNames(
-                            focus
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-700",
-                            "block px-4 py-2 text-sm"
-                          )}
-                        >
-                          Hoạt động đã đăng ký
-                        </Link>
-                      )}
-                    </MenuItem>
+                    <>
+                      <MenuItem>
+                        {({ focus }) => (
+                          <Link
+                            to="/register"
+                            className={classNames(
+                              focus
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm"
+                            )}
+                          >
+                            Hoạt động đã đăng ký
+                          </Link>
+                        )}
+                      </MenuItem>
+                      <MenuItem>
+                        {({ focus }) => (
+                          <Link
+                            to="/joined"
+                            className={classNames(
+                              focus
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm"
+                            )}
+                          >
+                            Điểm rèn luyện
+                          </Link>
+                        )}
+                      </MenuItem>
+                    </>
                   ) : (
-                    <></>
-                  )}
-                  {currentUser.userRole.userRole === ROLE.ADMIN ? (
-                    <MenuItem>
-                      {({ focus }) => (
-                        <Link
-                          to="/assistant"
-                          className={classNames(
-                            focus
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-700",
-                            "block px-4 py-2 text-sm"
-                          )}
-                        >
-                          Thống kê
-                        </Link>
-                      )}
-                    </MenuItem>
-                  ) : (
-                    <MenuItem>
-                      {({ focus }) => (
-                        <Link
-                          to="/assistant"
-                          className={classNames(
-                            focus
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-700",
-                            "block px-4 py-2 text-sm"
-                          )}
-                        >
-                          Điểm rèn luyện
-                        </Link>
-                      )}
-                    </MenuItem>
-                  )}
-                  {currentUser.userRole.userRole === ROLE.ADMIN ? (
-                    <MenuItem>
-                      {({ focus }) => (
-                        <Link
-                          to="/assistant"
-                          className={classNames(
-                            focus
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-700",
-                            "block px-4 py-2 text-sm"
-                          )}
-                        >
-                          Tạo hoạt động
-                        </Link>
-                      )}
-                    </MenuItem>
-                  ) : (
-                    <></>
+                    <>
+                      <MenuItem>
+                        {({ focus }) => (
+                          <Link
+                            to="/assistant"
+                            className={classNames(
+                              focus
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm"
+                            )}
+                          >
+                            Thống kê
+                          </Link>
+                        )}
+                      </MenuItem>
+                      <MenuItem>
+                        {({ focus }) => (
+                          <Link
+                            to="/assistant"
+                            className={classNames(
+                              focus
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm"
+                            )}
+                          >
+                            Tạo hoạt động
+                          </Link>
+                        )}
+                      </MenuItem>
+                    </>
                   )}
                   <form method="POST" action="#">
                     <MenuItem>

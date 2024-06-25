@@ -2,13 +2,15 @@ import { Link } from "react-router-dom";
 import { FaCommentDots } from "react-icons/fa6";
 import { FaThumbsUp } from "react-icons/fa6";
 import { MdOutlineThumbUpOffAlt } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import API, { endpoints } from "../../apis/API";
 import ContentLoading from "./../../common/ContentLoading";
+import { UserContext } from "../../context/Context";
 
 function Home() {
   const [activity, setActivity] = useState([]);
   const [loading, setLoading] = useState(false);
+  const currentUser = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +25,7 @@ function Home() {
     };
 
     fetchData();
-  }, []);
+  }, [currentUser]);
 
   return (
     <div className="w-11/12 min-h-lvh bg-gray-200 m-auto flex flex-col justify-start items-center py-5 rounded-sm">
@@ -31,7 +33,7 @@ function Home() {
         <ContentLoading />
       ) : (
         activity.map((item) => (
-          <div class="px-5 py-4 bg-white shadow rounded-lg w-5/6 mb-4">
+          <div key={item.id} class="px-5 py-4 bg-white shadow rounded-lg w-5/6 mb-4">
             <div class="flex justify-between items-center">
               <div class="flex mb-4">
                 <img
@@ -51,7 +53,7 @@ function Home() {
               <div>
                 <Link
                   to={`/activity-detail/${item.id}`}
-                  className="text-decoration-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center mt-4"
+                  className="text-decoration-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
                 >
                   Xem chi tiết
                 </Link>
@@ -75,7 +77,7 @@ function Home() {
                 <p className="font-light">{item.semester.yearStudy}</p>
               </div>
             </div>
-            <img src={item.image} alt="source_image" className="w-3/4 max-h-screen m-auto" />
+            <img src={item.image} alt="source_image" className="w-3/4 max-h-[600px] m-auto" />
             <div className="w-10/11 h-0.5 bg-gray-300 mt-5"></div>
             <div class="flex justify-between items-center mt-4 mx-2">
               <div class="flex justify-between items-center">

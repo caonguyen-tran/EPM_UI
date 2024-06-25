@@ -1,10 +1,10 @@
 import axios from "axios";
 import cookies from "react-cookies";
-const BASE_URL = "http://localhost:8080/EPMWebSpring";
+const BASE_URL = "http://localhost:8080/EPMWebSpring/";
 
 export const endpoints = {
     "user-login": "api/user/login/",
-    'current-user': "api/user/current-user/",
+    'current-user': "api/user/current-user",
     'register': 'api/user/process_register/',
     'activities': 'api/activities/',
     'joinedActivities': 'api/activities/joined',
@@ -34,7 +34,9 @@ export const endpoints = {
     'acceptScoreStudent': 'api/score-student/accept',
     'uploadCsvRollup': (activityId) => `api/score-student/upload-csv?${activityId}`,
     'userScore': (userId) => `api/score-student/scores/${userId}`,
-    'statisticByClass': (classId) => `api/statistics/class/${classId}/achievements`
+    'statisticByClass': (classId) => `api/statistics/class/${classId}/achievements`,
+    'registerByUserAndActivity': (activityId) => `api/register/user-and-activity/activity/${activityId}`,
+    "scoreStudentResult": 'api/score-student/result'
 }
 
 export const authApi = () => {

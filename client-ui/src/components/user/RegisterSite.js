@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { getDatetimeDetail } from "../../utils/Common";
+import { useEffect, useState } from "react";
+import { authApi, endpoints } from "../../apis/API";
 
 const data = {
   code: 1000,
@@ -177,6 +179,16 @@ const data = {
 
 const process = data.result;
 const RegisterSite = () => {
+  const [register, setRegister] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let res = await authApi().get(endpoints['scoreStudentResult'])
+      console.log(res.data)
+    }
+
+    fetchData()
+  }, [])
   return (
     <>
       <figure class="max-w-screen-md mx-auto text-center py-2">

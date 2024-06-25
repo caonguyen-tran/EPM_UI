@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import ContentLoading from "../../common/ContentLoading";
 import Chart from "react-apexcharts";
 import { useEffect, useState } from "react";
 import {

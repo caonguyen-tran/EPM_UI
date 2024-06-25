@@ -27,7 +27,6 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     let res = await API.post(endpoints["user-login"], user);
-    console.log(res.data);
     let status = res.data.status;
     if (status !== "FAIL") {
       cookies.save("token", res.data.result);
@@ -40,6 +39,7 @@ function Login() {
           });
           navigate("/");
         } catch (ex) {
+          setLoading(false)
           alert("catch in");
         }
       }, 200);
