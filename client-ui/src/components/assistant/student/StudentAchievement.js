@@ -1,15 +1,9 @@
-<<<<<<< HEAD
-// import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
-// import React from 'react';
-// import { Bar, Doughnut } from 'react-chartjs-2';
-// import { Link } from "react-router-dom";
-=======
+
 import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import React, { useState } from 'react';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { Link } from "react-router-dom";
 import { getDatetimeDetail } from '../../../utils/Common';
->>>>>>> e82222c6a03b7661c399a2b3be114edba209fceb
 
 // ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -188,14 +182,10 @@ import { getDatetimeDetail } from '../../../utils/Common';
 
 //     return { barData, doughnutData };
 // }
-
-<<<<<<< HEAD
 // const convertTimestampToDatetime = (timestamp) => {
 //     let datetime = new Date(timestamp)
 //     return `${datetime.getDate()}/${datetime.getMonth() + 1}/${datetime.getFullYear()} - ${datetime.getHours()}:${datetime.getMinutes()}`
 // };
-=======
->>>>>>> e82222c6a03b7661c399a2b3be114edba209fceb
 
 // const determineAchievement = (totalScore) => {
 //     if (totalScore >= 90) {
@@ -215,7 +205,6 @@ import { getDatetimeDetail } from '../../../utils/Common';
 
 // const achievement = determineAchievement(totalScore.overallTotalScore);
 
-<<<<<<< HEAD
 // const StudentAchievement = () => {
 //     const { barData, doughnutData } = ScoreChart();
 
@@ -290,7 +279,6 @@ import { getDatetimeDetail } from '../../../utils/Common';
 //         </>
 //     );
 // }
-=======
 
 
 const StudentAchievement = () => {
@@ -390,6 +378,5 @@ const StudentAchievement = () => {
         </>
     );
 }
->>>>>>> e82222c6a03b7661c399a2b3be114edba209fceb
 
 // export default StudentAchievement;
