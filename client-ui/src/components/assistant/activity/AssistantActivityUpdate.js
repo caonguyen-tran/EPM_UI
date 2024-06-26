@@ -1,7 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Button, Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import API, { authApi, endpoints } from "../../../apis/API";
 import Loading from "../../../common/Loading";
 
 const AssistantActivityUpdate = () => {
+
+    const [activity, setActivity] = useState([]);
+    const { id } = useParams();
+
+
+    useEffect(() => {
+        let id1 = parseInt(id, 10)
+        const loadActivity = async () => {
+            try {
+                let res = await API.get(endpoints["activityDetail"](id1));
+                setActivity(res.data.result);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        loadActivity();
+    }, [id]);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -10,6 +31,7 @@ const AssistantActivityUpdate = () => {
         description: '',
         active: '',
         close: '',
+        image: '',
         faculty: '',
         semester: '',
         term: ''
@@ -30,257 +52,184 @@ const AssistantActivityUpdate = () => {
         }));
     };
 
-    const [activity, setActivity] = useState([
-        {
-            id: 4,
-            name: "TẬP HUẤN NCKH CHỦ ĐỀ PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC",
-            startDate: 1715824800000,
-            endDate: 1715911200000,
-            description: "Hoạt động được tổ chức cho tất cả sinh viên trường Đại Học Mở thành phố Hồ Chí Minh",
-            active: true,
-            image: "https://res.cloudinary.com/dndakokcz/image/upload/v1716640766/lflqzauyyavx8jqoenwl.jpg",
-            slots: 500,
-            close: null,
-            file: null
-        },
-        {
-            id: 3,
-            name: "Điều 3",
-            description: "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội."
-        },
-        {
-            id: 5,
-            name: "Kì 2",
-            description: "Kì 2 năm 2024",
-            yearStudy: "2024"
-        },
-        {
-            id: 2,
-            name: "Công nghệ sinh học",
-            createdDate: 847645200000
-        }
-    ]);
 
-    const convertTimestampToDatetime = (timestamp) => {
-        const date = new Date(timestamp);
-        return date.toISOString().slice(0, 16); // Cắt chuỗi để lấy YYYY-MM-DDTHH:mm
+    const loadSemesters = async () => {
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['semesters']);
+            setSemesters(res.data);
+        } catch (ex) {
+            console.error(ex);
+        }
     };
 
+    const loadTerms = async () => {
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['terms']);
+            setTerms(res.data);
+        } catch (ex) {
+            console.error(ex);
+        }
+    }
+
+    const loadFaculties = async () => {
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['faculties']);
+            setFaculties(res.data);
+        } catch (ex) {
+            console.error(ex);
+        }
+    }
 
     useEffect(() => {
-        setSemesters([
-            {
-                "id": 1,
-                "name": "Kì 1",
-                "description": "Kì 1 năm 2023",
-                "yearStudy": "2023"
-            },
-            {
-                "id": 2,
-                "name": "Kì 2",
-                "description": "Kì 2 năm 2023",
-                "yearStudy": "2023"
-            },
-            {
-                "id": 3,
-                "name": "Kì 3",
-                "description": "Kì 3 năm 2023",
-                "yearStudy": "2023"
-            },
-            {
-                "id": 4,
-                "name": "Kì 1 ",
-                "description": "Kì 1 năm 2024",
-                "yearStudy": "2024"
-            },
-            {
-                "id": 5,
-                "name": "Kì 2",
-                "description": "Kì 2 năm 2024",
-                "yearStudy": "2024"
-            },
-            {
-                "id": 6,
-                "name": "Kì 3",
-                "description": "Kì 3 năm 2024",
-                "yearStudy": "2024"
-            },
-            {
-                "id": 7,
-                "name": "Kì 1",
-                "description": "Kì 1 năm 2025",
-                "yearStudy": "2025"
-            },
-            {
-                "id": 8,
-                "name": "Kì 2",
-                "description": "Kì 2 năm 2025",
-                "yearStudy": "2025"
-            },
-            {
-                "id": 9,
-                "name": "Kì 3",
-                "description": "Kì 3 năm 2025",
-                "yearStudy": "2025"
+        loadSemesters();
+        loadFaculties();
+        loadTerms();
+    }, []);
+
+    useEffect(() => {
+        if (activity) {
+            setFormData({
+                name: activity.name || '',
+                startDate: activity.startDate ? new Date(activity.startDate).toISOString().slice(0, 16) : '',
+                endDate: activity.endDate ? new Date(activity.endDate).toISOString().slice(0, 16) : '',
+                description: activity.description || '',
+                active: activity.active ? '1' : '0',
+                close: activity.close ? '1' : '0',
+                image: activity.image || '',
+                faculty: activity.faculty ? activity.faculty.id : '',
+                semester: activity.semester ? activity.semester.id : '',
+                term: activity.term ? activity.term.id : ''
+            });
+
+            console.log('FormData before submit:', formData);
+        }
+    }, [activity]);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+
+        const formDataWithImage = new FormData();
+        for (const key in formData) {
+            if (key !== 'close' && key !== 'active')
+                formDataWithImage.append(key, formData[key]);
+        }
+        if (image.current.files[0]) {
+            formDataWithImage.append('file', image.current.files[0]);
+        }
+
+        console.log('FormData after submit:', formData);
+
+        let id1 = parseInt(id, 10);
+
+        try {
+            let res = await authApi().post(endpoints["updateActivity"](id1), formDataWithImage, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            if (res.status === 200) {
+                alert('Activity updated successfully');
+            } else {
+                alert('Failed to update activity');
             }
-        ]);
-        setTerms([
-            {
-                "id": 1,
-                "name": "Điều 1",
-                "description": "Đánh giá về ý thức học tập"
-            },
-            {
-                "id": 2,
-                "name": "Điều 2",
-                "description": "Đánh giá về ý thức, kết quả chấp hành nội quy, quy định của nhà trường"
-            },
-            {
-                "id": 3,
-                "name": "Điều 3",
-                "description": "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội."
-            },
-            {
-                "id": 4,
-                "name": "Điều 4",
-                "description": "Đánh giá về phẩm chất công dân và quan hệ với cộng đồng"
-            },
-            {
-                "id": 5,
-                "name": "Điều 5",
-                "description": "Đánh giá về ý thức và kết quả tham gia phụ trách lớp học, các đoàn thể, tổ chức khác trong nhà trường"
-            },
-            {
-                "id": 6,
-                "name": "Điều 6",
-                "description": "Các trường hợp đặc biệt"
-            }
-        ]);
-        setFaculties([
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            },
-            {
-                "id": 2,
-                "name": "Công nghệ sinh học",
-                "createdDate": 847645200000
-            },
-            {
-                "id": 3,
-                "name": "Đông Nam Á học",
-                "createdDate": 659984400000
-            },
-            {
-                "id": 4,
-                "name": "Logistic - Quản lý chuỗi cung ứng",
-                "createdDate": 652813200000
-            },
-            {
-                "id": 5,
-                "name": "Marketing",
-                "createdDate": 614710800000
-            },
-            {
-                "id": 6,
-                "name": "Kinh tế học",
-                "createdDate": 559414800000
-            }
-        ]);
-        setFormData({
-            name: activity[0].name,
-            startDate: convertTimestampToDatetime(activity[0].startDate),
-            endDate: convertTimestampToDatetime(activity[0].endDate),
-            description: activity[0].description,
-            active: activity[0].active ? "1" : "0",
-            close: activity[0].close ? "1" : "0",
-            image: activity[0].image,
-            faculty: activity[3].id,
-            semester: activity[2].id,
-            term: activity[1].id
-        });
-    }, [])
+        } catch (error) {
+            console.error('Error updating activity:', error);
+            alert('Error updating activity');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (!activity) {
+        return <Loading />;
+    }
 
     return (
-
         <div className="container mx-auto mt-4 p-4 bg-white shadow-md rounded-lg">
-            <h1 className="text-2xl font-bold mb-4">Create New Activity</h1>
-            <form>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Name</label>
-                    <input
+            <h1 className="text-2xl font-bold mb-4">Update Activity</h1>
+            <Form onSubmit={handleSubmit}>
+                <FormGroup className="mb-4">
+                    <FormLabel>Name</FormLabel>
+                    <FormControl
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
                     />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Start Date and Time</label>
-                    <input
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <FormLabel>Start Date and Time</FormLabel>
+                    <FormControl
                         type="datetime-local"
                         name="startDate"
                         value={formData.startDate}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
                     />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">End Date and Time</label>
-                    <input
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <FormLabel>End Date and Time</FormLabel>
+                    <FormControl
                         type="datetime-local"
                         name="endDate"
                         value={formData.endDate}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
                     />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Description</label>
-                    <textarea
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <FormLabel>Description</FormLabel>
+                    <FormControl
+                        as="textarea"
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
-                    ></textarea>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Active</label>
-                    <select
+                    />
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <FormLabel>Active</FormLabel>
+                    <FormControl
+                        as="select"
                         name="active"
                         value={formData.active}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
                     >
-                        <option value="1">Đang diễn ra</option>
-                        <option value="0">Đã kết thúc</option>
-                    </select>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Close</label>
-                    <select
+                        <option value='1'>Đang diễn ra</option>
+                        <option value='0'>Đã kết thúc</option>
+                    </FormControl>
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <FormLabel>Close</FormLabel>
+                    <FormControl
+                        as="select"
                         name="close"
                         value={formData.close}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
                     >
-                        <option value="1">Đang mở đăng ký</option>
-                        <option value="0">Đã đóng đăng ký</option>
-                    </select>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Image</label>
-                    <input
+                        <option value='1'>Đang mở đăng ký</option>
+                        <option value='0'>Đã đóng đăng ký</option>
+                    </FormControl>
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <FormLabel>Image</FormLabel>
+                    <FormControl
                         type="file"
                         name="image"
                         ref={image}
                         accept=".png, .jpg"
                         className="w-full px-3 py-2 border rounded"
                     />
-                </div>
-                <div className="bg-gray-100 rounded-lg p-4 border border-gray-300">
+                </FormGroup>
+                <div className="bg-gray-100 rounded-lg p-4 border border-gray-300 mb-4">
                     <p className="text-gray-600 text-sm mb-2">Ảnh hiện tại</p>
                     <div className="w-full h-64 overflow-hidden">
                         <img
@@ -290,10 +239,11 @@ const AssistantActivityUpdate = () => {
                         />
                     </div>
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Faculty</label>
-                    <select
-                        name="faculty"
+                <FormGroup className="mb-4">
+                    <FormLabel>Faculty</FormLabel>
+                    <FormControl
+                        as="select"
+                        name="facultyId"
                         value={formData.faculty}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
@@ -304,12 +254,13 @@ const AssistantActivityUpdate = () => {
                                 {faculty.name}
                             </option>
                         ))}
-                    </select>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Semester</label>
-                    <select
-                        name="semester"
+                    </FormControl>
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <FormLabel>Semester</FormLabel>
+                    <FormControl
+                        as="select"
+                        name="semesterId"
                         value={formData.semester}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
@@ -317,15 +268,16 @@ const AssistantActivityUpdate = () => {
                         <option value="">Select Semester</option>
                         {semesters.map((semester) => (
                             <option key={semester.id} value={semester.id}>
-                                {semester.name} - {semester.yearStudy}
+                                {semester.description}
                             </option>
                         ))}
-                    </select>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Term</label>
-                    <select
-                        name="term"
+                    </FormControl>
+                </FormGroup>
+                <FormGroup className="mb-4">
+                    <FormLabel>Term</FormLabel>
+                    <FormControl
+                        as="select"
+                        name="termId"
                         value={formData.term}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
@@ -336,21 +288,18 @@ const AssistantActivityUpdate = () => {
                                 {term.name}
                             </option>
                         ))}
-                    </select>
-                </div>
+                    </FormControl>
+                </FormGroup>
                 {loading ? (
                     <div className="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white">
                         <Loading size={30} />
                     </div>
                 ) : (
-                    <button
-                        type="submit"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    >
+                    <Button type="submit" variant="primary" className="rounded">
                         Update activity
-                    </button>
+                    </Button>
                 )}
-            </form>
+            </Form>
         </div>
     );
 }
