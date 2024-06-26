@@ -17,7 +17,7 @@ export const endpoints = {
     'listAssistant': 'api/assistant',
     'createComment': 'api/comments/create',
     'deleteComment': 'api/comments/delete',
-    'activityComments': 'api/comments/activity',
+    'activityComments': (activityId) => `api/comments/activity/${activityId}`,
     'updateComment': 'api/comments/update',
     'rejectJoin': (joinId) => `api/join-activity/${joinId}`,
     'listJoinActivities': (activityId) => `api/join-activity/${activityId}`,
@@ -36,7 +36,9 @@ export const endpoints = {
     'userScore': (userId) => `api/score-student/scores/${userId}`,
     'statisticByClass': (classId) => `api/statistics/class/${classId}/achievements`,
     'registerByUserAndActivity': (activityId) => `api/register/user-and-activity/activity/${activityId}`,
-    "scoreStudentResult": 'api/score-student/result'
+    'registerSubmit': 'api/register/',
+    "scoreStudentResult": 'api/score-student/result',
+    'personalRegister': 'api/register/personal-register'
 }
 
 export const authApi = () => {

@@ -1,7 +1,6 @@
-
+import { FaHeart } from "react-icons/fa6";
 import { useContext, useEffect, useState } from "react";
 import { FaCommentDots, FaThumbsUp } from "react-icons/fa6";
-import { MdOutlineThumbUpOffAlt } from "react-icons/md";
 import { Link } from "react-router-dom";
 import API, { endpoints } from "../../apis/API";
 import ContentLoading from "./../../common/ContentLoading";
@@ -33,7 +32,7 @@ function Home() {
         <ContentLoading />
       ) : (
         activity.map((item) => (
-          <div key={item.id} class="px-5 py-4 bg-white shadow rounded-lg w-5/6 mb-4">
+          <div key={item.id} class="px-5 py-4 bg-gray-50 shadow rounded-lg w-5/6 mb-4">
             <div class="flex justify-between items-center">
               <div class="flex mb-4">
                 <img
@@ -81,16 +80,16 @@ function Home() {
             <div className="w-10/11 h-0.5 bg-gray-300 mt-5"></div>
             <div class="flex justify-between items-center mt-4 mx-2">
               <div class="flex justify-between items-center">
-                <MdOutlineThumbUpOffAlt />
+                <FaHeart color="#FF1A86" />
                 <span class="ml-1 text-gray-500  font-light">8</span>
               </div>
               <div class="ml-1 text-gray-500 font-light">33 comments</div>
             </div>
             <div className="h-12 max-w-full mt-2 mx-1 flex justify-start items-center">
               <button className="bg-gray-300 w-9 h-9 mr-4 rounded-full flex justify-center items-center">
-                <FaThumbsUp />
+                <FaHeart color="white" />
               </button>
-              <Link className="bg-gray-300 px-2 h-8 rounded-md text-decoration-none flex justify-center items-center">
+              <Link to={`/activity-detail/${item.id}`} className="bg-gray-300 px-2 h-8 rounded-md text-decoration-none flex justify-center items-center">
                 <FaCommentDots className="mr-1" />
                 Xem bình luận
               </Link>

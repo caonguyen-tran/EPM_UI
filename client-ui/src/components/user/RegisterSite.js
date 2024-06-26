@@ -2,193 +2,23 @@ import { Link } from "react-router-dom";
 import { getDatetimeDetail } from "../../utils/Common";
 import { useEffect, useState } from "react";
 import { authApi, endpoints } from "../../apis/API";
+import TableLoading from "../../common/TableLoading";
 
-const data = {
-  code: 1000,
-  status: "SUCCESS",
-  result: [
-    [
-      {
-        id: 4,
-        dateRegister: 1716648529000,
-        rollup: false,
-        proofJoining: null,
-        note: null,
-        accept: false,
-        file: null,
-      },
-      {
-        id: 3,
-        username: "totrongnhan2003",
-        password:
-          "$2a$10$H90rzJposZji3HH9vVvh/OrhF/2hC0ElvwZV9UpPVvtuqWkLs8aLi",
-        avatar:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1716644647/zcicm5gbqbyt6bkts7nv.jpg",
-        active: true,
-        verificationCode: null,
-        file: null,
-      },
-      {
-        id: 5,
-        name: "Hội thảo định hướng nghiên cứu khoa học sinh viên khoa KTKT",
-        startDate: 1714527000000,
-        endDate: 1714615200000,
-        description: "Hoạt động được khoa Kinh tế tổ chức",
-        active: true,
-        image:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1716640861/misps2f1nubwpx7wmwnk.jpg",
-        slots: 100,
-        close: false,
-        file: null,
-      },
-      {
-        id: 3,
-        name: "Điều 3",
-        description:
-          "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội.",
-      },
-    ],
-    [
-      {
-        id: 6,
-        dateRegister: 1716648552000,
-        rollup: false,
-        proofJoining: null,
-        note: null,
-        accept: false,
-        file: null,
-      },
-      {
-        id: 3,
-        username: "totrongnhan2003",
-        password:
-          "$2a$10$H90rzJposZji3HH9vVvh/OrhF/2hC0ElvwZV9UpPVvtuqWkLs8aLi",
-        avatar:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1716644647/zcicm5gbqbyt6bkts7nv.jpg",
-        active: true,
-        verificationCode: null,
-        file: null,
-      },
-      {
-        id: 6,
-        name: "Cuộc thi Giảng Đường Pháp Luật",
-        startDate: 1717034400000,
-        endDate: 1717120800000,
-        description:
-          "Hoạt động được tổ chức cho tất cả sinh viên trường Đại học Mở thành phố Hồ Chí Minh có am hiểu về luật",
-        active: true,
-        image:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1716640972/otssir8faxwboqrufwft.jpg",
-        slots: 150,
-        close: false,
-        file: null,
-      },
-      {
-        id: 3,
-        name: "Điều 3",
-        description:
-          "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội.",
-      },
-    ],
-    [
-      {
-        id: 9,
-        dateRegister: 1716648895000,
-        rollup: true,
-        proofJoining:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1716640766/lflqzauyyavx8jqoenwl.jpg",
-        note: null,
-        accept: true,
-        file: null,
-      },
-      {
-        id: 3,
-        username: "totrongnhan2003",
-        password:
-          "$2a$10$H90rzJposZji3HH9vVvh/OrhF/2hC0ElvwZV9UpPVvtuqWkLs8aLi",
-        avatar:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1716644647/zcicm5gbqbyt6bkts7nv.jpg",
-        active: true,
-        verificationCode: null,
-        file: null,
-      },
-      {
-        id: 8,
-        name: "Chuyên đề Tiny Machine Learning",
-        startDate: 1717990200000,
-        endDate: 1718076600000,
-        description:
-          "Tiny Machine Learning được tổ chức bởi khoa Công Nghệ Thông Tin",
-        active: true,
-        image:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1716648812/yhxzwbkqbhilw8uylbov.jpg",
-        slots: 60,
-        close: false,
-        file: null,
-      },
-      {
-        id: 3,
-        name: "Điều 3",
-        description:
-          "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội.",
-      },
-    ],
-    [
-      {
-        id: 26,
-        dateRegister: 1718819266000,
-        rollup: false,
-        proofJoining: null,
-        note: null,
-        accept: false,
-        file: null,
-      },
-      {
-        id: 3,
-        username: "totrongnhan2003",
-        password:
-          "$2a$10$H90rzJposZji3HH9vVvh/OrhF/2hC0ElvwZV9UpPVvtuqWkLs8aLi",
-        avatar:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1716644647/zcicm5gbqbyt6bkts7nv.jpg",
-        active: true,
-        verificationCode: null,
-        file: null,
-      },
-      {
-        id: 12,
-        name: "Báo cáo chuyên đề kỹ thuật phần mềm",
-        startDate: 1716688800000,
-        endDate: 1716656400000,
-        description:
-          "BÁO CÁO CHUYÊN ĐỀ VỀ KỸ THUẬT PHẦN MỀM\r\nBCV: Nguyễn Chí Cường - một Software Architect có uy tín từ Công ty Cadena.",
-        active: true,
-        image:
-          "https://res.cloudinary.com/dndakokcz/image/upload/v1718266872/m5rzfwum0e06hpmoncxc.jpg",
-        slots: 60,
-        close: false,
-        file: null,
-      },
-      {
-        id: 1,
-        name: "Điều 1",
-        description: "Đánh giá về ý thức học tập",
-      },
-    ],
-  ],
-};
 
-const process = data.result;
 const RegisterSite = () => {
-  const [register, setRegister] = useState([])
+  const [register, setRegister] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      let res = await authApi().get(endpoints['scoreStudentResult'])
-      console.log(res.data)
-    }
+      setLoading(true);
+      let res = await authApi().get(endpoints["personalRegister"]);
+      setRegister(res.data.result);
+      setLoading(false);
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
   return (
     <>
       <figure class="max-w-screen-md mx-auto text-center py-2">
@@ -223,64 +53,74 @@ const RegisterSite = () => {
       </figure>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg min-h-lvh z-0 mt-2">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
-          <thead class="text-xs text-white uppercase bg-stone-700">
-            <tr>
-              <th scope="col" class="px-6 py-3">
-                ID
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Ngày đăng ký
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Tên hoạt động
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Ngày bắt đầu
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Ngày kết thúc
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Số lượng tham gia
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Điều
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {process.map((element) => (
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                >
-                  {element[0].id}
+        {loading ? (
+          <TableLoading />
+        ) : register.length === 0 ? (
+          <div className="w-full h-4/5 flex text-center">Ban chua co dang ky hoat dong nao ?</div>
+        ) : (
+          <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-white uppercase bg-stone-700">
+              <tr>
+                <th scope="col" class="px-6 py-3">
+                  ID
                 </th>
-                <td class="px-6 py-4">{getDatetimeDetail(element[0].dateRegister)}</td>
-                <td class="px-6 py-4">{element[2].name}</td>
-                <td class="px-6 py-4">{getDatetimeDetail(element[2].startDate)}</td>
-                <td class="px-6 py-4">
-                  {getDatetimeDetail(element[2].endDate)}
-                </td>
-                <td class="px-6 py-4 text-center">{element[2].slots}</td>
-                <td class="px-6 py-4">{element[3].name}</td>
-                <td class="px-6 py-4">
-                  <Link
-                    href="#"
-                    class="text-decoration-none font-medium hover:text-rose-600"
-                  >
-                    Xóa
-                  </Link>
-                </td>
+                <th scope="col" class="px-6 py-3">
+                  Ngày đăng ký
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Tên hoạt động
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Ngày bắt đầu
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Ngày kết thúc
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Số lượng tham gia
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Điều
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Action
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {register.map((element) => (
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                  >
+                    {element[0].id}
+                  </th>
+                  <td class="px-6 py-4">
+                    {getDatetimeDetail(element[0].dateRegister)}
+                  </td>
+                  <td class="px-6 py-4">{element[1].name}</td>
+                  <td class="px-6 py-4">
+                    {getDatetimeDetail(element[1].startDate)}
+                  </td>
+                  <td class="px-6 py-4">
+                    {getDatetimeDetail(element[1].endDate)}
+                  </td>
+                  <td class="px-6 py-4 text-center">{element[2].slots}</td>
+                  <td class="px-6 py-4">{element[2].name}</td>
+                  <td class="px-6 py-4">
+                    <Link
+                      href="#"
+                      class="text-decoration-none font-medium hover:text-rose-600"
+                    >
+                      Xóa
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </>
   );
