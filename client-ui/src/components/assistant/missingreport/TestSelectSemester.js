@@ -2,9 +2,9 @@ import FilterComponent from "../../../common/FilterComponent";
 
 
 const TestSelectSemester = () => {
-    const handleFilter = (semesterId, yearId) => {
+    const handleFilter = (semesterId, yearStudy) => {
         console.log("Selected Semester ID:", semesterId);
-        console.log("Selected Year:", yearId);
+        console.log("Selected Year:", yearStudy);
     };
 
     return (
