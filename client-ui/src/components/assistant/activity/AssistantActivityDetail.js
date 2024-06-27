@@ -48,9 +48,10 @@ const AssistantActivityDetail = () => {
             }
         } catch (error) {
             console.error('Failed to delete activity:', error);
-            alert('Failed to delete activitye');
+            alert('Failed to delete activity');
         } finally {
             setLoading(false);
+            nav('/assistant/activity/list')
         }
     }
 

@@ -1,20 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import { FormControl, FormGroup, FormLabel } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import API, { authApi, endpoints } from "../../../apis/API";
 import Loading from "../../../common/Loading";
 
 const AssistantActivityUpdate = () => {
-
-    const [activity, setActivity] = useState([]);
+    const [activity, setActivity] = useState(null);
     const { id } = useParams();
 
-
     useEffect(() => {
-        let id1 = parseInt(id, 10)
         const loadActivity = async () => {
             try {
-                let res = await API.get(endpoints["activityDetail"](id1));
+                let res = await API.get(endpoints["activityDetail"](parseInt(id, 10)));
                 setActivity(res.data.result);
             } catch (error) {
                 console.error(error);
@@ -29,12 +26,11 @@ const AssistantActivityUpdate = () => {
         startDate: '',
         endDate: '',
         description: '',
-        active: '',
-        close: '',
-        image: '',
-        faculty: '',
-        semester: '',
-        term: ''
+        slots: '',
+        facultyId: '',
+        semesterId: '',
+        termId: '',
+        image: ''
     });
 
     const image = useRef();
@@ -42,7 +38,6 @@ const AssistantActivityUpdate = () => {
     const [semesters, setSemesters] = useState([]);
     const [terms, setTerms] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,6 +47,50 @@ const AssistantActivityUpdate = () => {
         }));
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        const formattedData = {
+            ...formData,
+            startDate: convertToValidDateString(formData.startDate),
+            endDate: convertToValidDateString(formData.endDate)
+        };
+
+        console.log("Form Data Before Submit:", formattedData);
+
+        try {
+            const form = new FormData();
+
+            Object.keys(formattedData).forEach(key => {
+                if (key !== 'image') {
+                    form.append(key, formattedData[key]);
+                }
+            });
+
+            if (image.current && image.current.files[0]) 
+                form.append('file', image.current.files[0]);
+
+            const res = await authApi().post(endpoints["updateActivity"](parseInt(id, 10)), form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            if (res.status === 200) {
+                alert('Activity updated successfully');
+            } else {
+                alert('Failed to update activity');
+            }
+        } catch (error) {
+            console.error('Failed to update activity:', error);
+            alert('Failed to update activity');
+        } finally {
+            setLoading(false);
+        }
+
+        console.log("Form Data After Submit:", formData);
+    };
 
     const loadSemesters = async () => {
         try {
@@ -71,7 +110,7 @@ const AssistantActivityUpdate = () => {
         } catch (ex) {
             console.error(ex);
         }
-    }
+    };
 
     const loadFaculties = async () => {
         try {
@@ -81,78 +120,37 @@ const AssistantActivityUpdate = () => {
         } catch (ex) {
             console.error(ex);
         }
-    }
+    };
+
+    const convertToValidDateString = (datetime) => {
+        if (!datetime) return '';
+        const date = new Date(datetime);
+        return isNaN(date.getTime()) ? '' : date.toISOString().substring(0, 16);
+    };
 
     useEffect(() => {
         loadSemesters();
         loadFaculties();
         loadTerms();
-    }, []);
-
-    useEffect(() => {
         if (activity) {
             setFormData({
                 name: activity.name || '',
-                startDate: activity.startDate ? new Date(activity.startDate).toISOString().slice(0, 16) : '',
-                endDate: activity.endDate ? new Date(activity.endDate).toISOString().slice(0, 16) : '',
+                startDate: convertToValidDateString(activity.startDate),
+                endDate: convertToValidDateString(activity.endDate),
                 description: activity.description || '',
-                active: activity.active ? '1' : '0',
-                close: activity.close ? '1' : '0',
-                image: activity.image || '',
-                faculty: activity.faculty ? activity.faculty.id : '',
-                semester: activity.semester ? activity.semester.id : '',
-                term: activity.term ? activity.term.id : ''
+                slots: activity.slots || '',
+                facultyId: activity.faculty?.id || '',
+                semesterId: activity.semester?.id || '',
+                termId: activity.term?.id || '',
+                image: activity.image || ''
             });
-
-            console.log('FormData before submit:', formData);
         }
     }, [activity]);
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        setLoading(true);
-
-        const formDataWithImage = new FormData();
-        for (const key in formData) {
-            if (key !== 'close' && key !== 'active')
-                formDataWithImage.append(key, formData[key]);
-        }
-        if (image.current.files[0]) {
-            formDataWithImage.append('file', image.current.files[0]);
-        }
-
-        console.log('FormData after submit:', formData);
-
-        let id1 = parseInt(id, 10);
-
-        try {
-            let res = await authApi().post(endpoints["updateActivity"](id1), formDataWithImage, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-
-            if (res.status === 200) {
-                alert('Activity updated successfully');
-            } else {
-                alert('Failed to update activity');
-            }
-        } catch (error) {
-            console.error('Error updating activity:', error);
-            alert('Error updating activity');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (!activity) {
-        return <Loading />;
-    }
 
     return (
         <div className="container mx-auto mt-4 p-4 bg-white shadow-md rounded-lg">
             <h1 className="text-2xl font-bold mb-4">Update Activity</h1>
-            <Form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
                 <FormGroup className="mb-4">
                     <FormLabel>Name</FormLabel>
                     <FormControl
@@ -194,30 +192,14 @@ const AssistantActivityUpdate = () => {
                     />
                 </FormGroup>
                 <FormGroup className="mb-4">
-                    <FormLabel>Active</FormLabel>
+                    <FormLabel>Slots</FormLabel>
                     <FormControl
-                        as="select"
-                        name="active"
-                        value={formData.active}
+                        type="number"
+                        name="slots"
+                        value={formData.slots}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
-                    >
-                        <option value='1'>Đang diễn ra</option>
-                        <option value='0'>Đã kết thúc</option>
-                    </FormControl>
-                </FormGroup>
-                <FormGroup className="mb-4">
-                    <FormLabel>Close</FormLabel>
-                    <FormControl
-                        as="select"
-                        name="close"
-                        value={formData.close}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border rounded"
-                    >
-                        <option value='1'>Đang mở đăng ký</option>
-                        <option value='0'>Đã đóng đăng ký</option>
-                    </FormControl>
+                    />
                 </FormGroup>
                 <FormGroup className="mb-4">
                     <FormLabel>Image</FormLabel>
@@ -229,22 +211,24 @@ const AssistantActivityUpdate = () => {
                         className="w-full px-3 py-2 border rounded"
                     />
                 </FormGroup>
-                <div className="bg-gray-100 rounded-lg p-4 border border-gray-300 mb-4">
-                    <p className="text-gray-600 text-sm mb-2">Ảnh hiện tại</p>
-                    <div className="w-full h-64 overflow-hidden">
-                        <img
-                            src={formData.image}
-                            alt="Current Image"
-                            className="w-full h-full object-cover"
-                        />
+                {formData.image && (
+                    <div className="bg-gray-100 rounded-lg p-4 border border-gray-300 mb-4">
+                        <p className="text-gray-600 text-sm mb-2">Current Image</p>
+                        <div className="w-full h-64 overflow-hidden">
+                            <img
+                                src={formData.image}
+                                alt="Current Image"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
                 <FormGroup className="mb-4">
                     <FormLabel>Faculty</FormLabel>
                     <FormControl
                         as="select"
                         name="facultyId"
-                        value={formData.faculty}
+                        value={formData.facultyId}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
                     >
@@ -261,7 +245,7 @@ const AssistantActivityUpdate = () => {
                     <FormControl
                         as="select"
                         name="semesterId"
-                        value={formData.semester}
+                        value={formData.semesterId}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
                     >
@@ -278,7 +262,7 @@ const AssistantActivityUpdate = () => {
                     <FormControl
                         as="select"
                         name="termId"
-                        value={formData.term}
+                        value={formData.termId}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded"
                     >
@@ -295,11 +279,14 @@ const AssistantActivityUpdate = () => {
                         <Loading size={30} />
                     </div>
                 ) : (
-                    <Button type="submit" variant="primary" className="rounded">
-                        Update activity
-                    </Button>
+                    <button
+                        type="submit"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                        Update Activity
+                    </button>
                 )}
-            </Form>
+            </form>
         </div>
     );
 }

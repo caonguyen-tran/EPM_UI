@@ -28,6 +28,8 @@ export const endpoints = {
     'createMissingReport': 'api/missing-report/create',
     'missingReportOfStudent': 'api/missing-report/get-missing-report-of-student/',
     'missingReportByFaculty': 'api/report/',
+    'missingReportDetail': (mrId) => `api/missing-report/${mrId}`,
+    'getMissingReport': 'api/missing-report/get-list',
     'pdfReport': (studentId) => `api/pdf/${studentId}`,
     'csvReport': (studentId) => `api/csv/${studentId}`,
     'scoreByTerm': 'api/score/scores-by-term',
