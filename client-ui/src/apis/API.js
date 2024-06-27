@@ -19,6 +19,7 @@ export const endpoints = {
     'deleteComment': 'api/comments/delete',
     'activityComments': (activityId) => `api/comments/activity/${activityId}`,
     'updateComment': 'api/comments/update',
+    'getSubComments': (parentId) => `api/comments/get-child/${parentId}`,
     'rejectJoin': (joinId) => `api/join-activity/${joinId}`,
     'listJoinActivities': (activityId) => `api/join-activity/${activityId}`,
     'likeActivity': 'api/likes/like',
