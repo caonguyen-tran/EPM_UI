@@ -14,7 +14,7 @@ import AssistantActivityUpdate from "./components/assistant/activity/AssistantAc
 import MissingReportDetail from "./components/assistant/missingreport/MissingReportDetail";
 import MissingReportList from "./components/assistant/missingreport/MissingReportList";
 import TestSelectSemester from "./components/assistant/missingreport/TestSelectSemester";
-import ScoreDetail from "./components/assistant/student/ScoreDetail";
+import ScoreDetail from "./components/assistant/scorestudent/ScoreDetail";
 import StudentAchievement from "./components/assistant/student/StudentAchievement";
 import StudentList from "./components/assistant/student/StudentList";
 import ActivityDetail from "./components/user/ActivityDetail";

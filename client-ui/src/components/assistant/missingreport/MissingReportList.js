@@ -1,66 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { authApi, endpoints } from "../../../apis/API";
+import FilterComponent from "../../../common/FilterComponent";
 
 const MissingReportList = () => {
-    const data = [
-        [
-            {
-                "id": 4,
-                "proofJoining": "https://res.cloudinary.com/dndakokcz/image/upload/v1718266010/akc0kjkphseqp1jxyedd.png",
-                "status": "Pending",
-                "createdDate": 1718266008000,
-                "note": "test create missing report",
-                "file": null
-            },
-            {
-                "id": 4,
-                "name": "TẬP HUẤN NCKH CHỦ ĐỀ \"PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC\"",
-                "startDate": 1715824800000,
-                "endDate": 1715911200000,
-                "description": "Hoạt động được tổ chức cho tất cả sinh viên trường Đại Học Mở thành phố Hồ Chí Minh",
-                "active": true,
-                "image": "https://res.cloudinary.com/dndakokcz/image/upload/v1716640766/lflqzauyyavx8jqoenwl.jpg",
-                "slots": 500,
-                "close": null,
-                "file": null
+
+    const [missingReport, setMissingReport] = useState([]);
+    const [semesters, setSemesters] = useState([]);
+    const [id, setId] = useState(null);
+    const [year, setYear] = useState(null);
+
+    const loadMissingReports = async (semesterId, yearStudy) => {
+        const params = {};
+
+        if (yearStudy) {
+            params.yearStudy = yearStudy;
+        } else if (semesterId) {
+            params.semesterId = semesterId;
+        }
+
+        console.log("Request params:", params);
+
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['getMissingReport'], { params });
+
+            if (Array.isArray(res.data)) {
+                setMissingReport(res.data);
+            } else {
+                setMissingReport([]);
             }
-        ],
-        [
-            {
-                "id": 5,
-                "proofJoining": "https://res.cloudinary.com/dndakokcz/image/upload/v1718266010/akc0kjkphseqp1jxyedd.png",
-                "status": null,
-                "createdDate": 1718445237000,
-                "note": null,
-                "file": null
-            },
-            {
-                "id": 7,
-                "name": "Chuyên đề DevOps và MLOps",
-                "startDate": 1717646400000,
-                "endDate": 1717732800000,
-                "description": "Chuyên đề DevOps và MLOps dành cho sinh viên Khoa Công Nghệ Thông Tin trường Đại học Mở thành phố Hồ Chí Minh",
-                "active": null,
-                "image": "https://res.cloudinary.com/dndakokcz/image/upload/v1716648743/nrk46d6vwzsflvtd0iih.jpg",
-                "slots": 60,
-                "close": null,
-                "file": null
-            }
-        ]
-    ];
+        } catch (ex) {
+            console.error(ex);
+            setMissingReport([]);
+        }
+    };
 
-    // const handleFilter = (semesterId, yearId) => {
-    //     let filtered = data;
+    useEffect(() => {
+        loadSemesters();
+    }, []);
 
-    //     if (semesterId) {
-    //         filtered = filtered.filter(report => report[1].id === parseInt(semesterId));
-    //     }
+    useEffect(() => {
+        if (id || year) {
+            loadMissingReports(id, year);
+        }
+    }, [id, year]);
 
-    //     if (yearId) {
-    //         filtered = filtered.filter(report => report[1].description.includes(yearId));
-    //     }
+    const loadSemesters = async () => {
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['semesters']);
+            setSemesters(res.data);
+        } catch (ex) {
+            console.error(ex);
+        }
+    };
 
-    // };
+    const handleFilter = (semesterId, yearStudy) => {
+        console.log("Selected Semester ID:", semesterId);
+        console.log("Selected Year:", yearStudy);
+        setId(semesterId);
+        setYear(yearStudy);
+
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 1000);
+        });
+    };
+
 
 
     const convertTimestampToDatetime = (timestamp) => {
@@ -73,13 +81,25 @@ const MissingReportList = () => {
             <div className="bg-blue-100 text-gray-700 text-center py-4 rounded-lg shadow mb-6">
                 <h1 className="text-3xl font-bold">Danh sách báo thiếu</h1>
             </div>
-            {/* <FilterComponent semesters={semesters} /> */}
+            <div className="container mx-auto mt-4 p-4">
+                <h1 className="text-2xl font-bold mb-4 text-center">Chọn học kỳ hoặc năm học</h1>
+                <FilterComponent onFilter={handleFilter} semesters={semesters} />
+            </div>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg min-h-lvh z-0 mt-2">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
                     <thead class="text-xs text-white uppercase bg-stone-700">
                         <tr>
                             <th scope="col" class="px-6 py-3">
                                 ID
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Họ tên người tạo
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Lớp
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Khoa
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Trạng thái
@@ -99,7 +119,7 @@ const MissingReportList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((element) => (
+                        {missingReport.map((element) => (
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th
                                     scope="row"
@@ -107,13 +127,16 @@ const MissingReportList = () => {
                                 >
                                     {element[0].id}
                                 </th>
+                                <td class="px-6 py-4">{element[2].lastname} {element[2].firstname}</td>
+                                <td class="px-6 py-4">{element[3].name}</td>
+                                <td class="px-6 py-4">{element[4].name}</td>
                                 <td class="px-6 py-4">{element[0].status}</td>
                                 <td class="px-6 py-4">{convertTimestampToDatetime(element[0].createdDate)}</td>
                                 <td className="px-6 py-4">{element[0].note}</td>
                                 <td className="px-6 py-4">{element[1].name}</td>
                                 <td class="px-6 py-4">
                                     <Link
-                                        to="/assistant/missing-report/detail/1"
+                                        to={`/assistant/missing-report/detail/${element[0].id}`}
                                         href="#"
                                         class="text-decoration-none font-medium hover:text-rose-600"
                                     >

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import API, { endpoints } from "../../../apis/API";
+import { authApi, endpoints } from "../../../apis/API";
 import Loading from "../../../common/Loading";
 
-const UploadCSV = () => {
+const UploadCSV = ({activityId}) => {
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (event) => {
@@ -13,8 +13,10 @@ const UploadCSV = () => {
         const formData = new FormData();
         formData.append('file', event.target.file.files[0]);
 
+        let id = Number(activityId);
+
         try {
-            let res = await API.post(endpoints['uploadCsvRollup'], formData, {
+            let res = await authApi().post(endpoints['uploadCsvRollup'](id), formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

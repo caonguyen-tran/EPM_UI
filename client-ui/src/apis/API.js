@@ -9,6 +9,7 @@ export const endpoints = {
     'activities': 'api/activities/',
     'joinedActivities': 'api/activities/joined',
     'createActivity': 'api/activities/create',
+    'allActivitiesBySemester': 'api/activities/all',
     'activityDetail': (id) => `api/activities/${id}`,
     'updateActivity': (id) => `api/activities/update/${id}`,
     'deleteActivity': (id) => `api/activities/delete/${id}`,
@@ -28,18 +29,23 @@ export const endpoints = {
     'createMissingReport': 'api/missing-report/create',
     'missingReportOfStudent': 'api/missing-report/get-missing-report-of-student/',
     'missingReportByFaculty': 'api/report/',
+    'missingReportDetail': (mrId) => `api/missing-report/${mrId}`,
+    'getMissingReport': 'api/missing-report/get-list',
     'pdfReport': (studentId) => `api/pdf/${studentId}`,
     'csvReport': (studentId) => `api/csv/${studentId}`,
     'scoreByTerm': 'api/score/scores-by-term',
     'totalScoreByTerm': 'api/score/total-scores-by-term',
     'acceptScoreStudent': 'api/score-student/accept',
-    'uploadCsvRollup': (activityId) => `api/score-student/upload-csv?${activityId}`,
+    'uploadCsvRollup': (activityId) => `api/score-student/upload-csv?activityId=${activityId}`,
     'userScore': (userId) => `api/score-student/scores/${userId}`,
     'statisticByClass': (classId) => `api/statistics/class/${classId}/achievements`,
     'registerByUserAndActivity': (activityId) => `api/register/user-and-activity/activity/${activityId}`,
     'registerSubmit': 'api/register/',
     "scoreStudentResult": 'api/score-student/result',
-    'personalRegister': 'api/register/personal-register'
+    'personalRegister': 'api/register/personal-register',
+    'semesters': 'api/semesters/',
+    'terms': 'api/terms/',
+    'faculties': 'api/faculties/'
 }
 
 export const authApi = () => {
