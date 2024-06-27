@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authApi, endpoints } from "../../../apis/API";
 import FilterComponent from "../../../common/FilterComponent";
 import { getDatetimeDetail } from "../../../utils/Common";
@@ -10,6 +10,7 @@ const AssistantActivityList = () => {
     const [semesters, setSemesters] = useState([]);
     const [id, setId] = useState(null);
     const [year, setYear] = useState(null);
+    const nav = useNavigate();
 
     useEffect(() => {
         loadSemesters();
@@ -70,12 +71,22 @@ const AssistantActivityList = () => {
         });
     };
 
+    const create = () => {
+        nav('/assistant/activity/create');
+    }
+
     return (
         <>
             <div className="bg-blue-100 text-gray-700 text-center py-4 rounded-lg shadow mb-6">
                 <h1 className="text-3xl font-bold">Danh sách các hoạt động</h1>
                 <p className="mt-2 text-lg">Các hoạt động mới nhất được tổ chức bởi trường Đại Học Mở thành phố Hồ Chí Minh</p>
             </div>
+            <button
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+                onClick={create}
+            >
+                Tạo hoạt động mới
+            </button>
             <div className="container mx-auto mt-4 p-4">
                 <h1 className="text-2xl font-bold mb-4 text-center">Chọn học kỳ hoặc năm học</h1>
                 <FilterComponent onFilter={handleFilter} semesters={semesters} />
