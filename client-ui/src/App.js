@@ -49,9 +49,9 @@ function App() {
                     <Route path="missing-report/list" element={<MissingReportList/>}/>
                     <Route path="missing-report/detail/:id" element={<MissingReportDetail/>}/>
                     <Route path="class" element={<Class/>}/>
-                    <Route path="class/1" element={<StudentList/>}/>
-                    <Route path="class/1/student/1" element={<StudentAchievement/>}/>
-                    <Route path="class/1/student/1/join-activity/1/scores" element={<ScoreDetail/>}/>
+                    <Route path="class/:id" element={<StudentList/>}/>
+                    <Route path="class/:id/student/:studentId" element={<StudentAchievement/>}/>
+                    <Route path="class/:id/student/:studentId/join-activity/:joinActivityId/scores" element={<ScoreDetail/>}/>
                 </Route>
                 <Route path="" element={<Home />} />
                 <Route path="/activity-detail/:id" element={<ActivityDetail />} />

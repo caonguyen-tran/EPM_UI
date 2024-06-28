@@ -1,243 +1,280 @@
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import { CSVLink } from 'react-csv';
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { authApi, endpoints } from "../../../apis/API";
+import FilterComponent from '../../../common/FilterComponent';
 import { getDatetimeDetail } from '../../../utils/Common';
 
-const activityJoin = [
-    [
-        {
-            "id": 4,
-            "name": "TẬP HUẤN NCKH CHỦ ĐỀ \"PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC\"",
-            "startDate": 1715824800000,
-            "endDate": 1715911200000,
-            "description": "Hoạt động được tổ chức cho tất cả sinh viên trường Đại Học Mở thành phố Hồ Chí Minh",
-            "active": true,
-            "image": "https://res.cloudinary.com/dndakokcz/image/upload/v1716640766/lflqzauyyavx8jqoenwl.jpg",
-            "slots": 500,
-            "close": null,
-            "file": null
-        },
-        {
-            "id": 5,
-            "name": "Kì 2",
-            "description": "Kì 2 năm 2024",
-            "yearStudy": "2024"
-        },
-        {
-            "id": 3,
-            "name": "Điều 3",
-            "description": "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội."
-        },
-        {
-            "id": 3,
-            "dateRegister": 1718942379000,
-            "rollup": true,
-            "proofJoining": "proof1",
-            "note": "note1",
-            "accept": false,
-            "file": null
-        }
-    ],
-    [
-        {
-            "id": 7,
-            "name": "Chuyên đề DevOps và MLOps",
-            "startDate": 1717646400000,
-            "endDate": 1717732800000,
-            "description": "Chuyên đề DevOps và MLOps dành cho sinh viên Khoa Công Nghệ Thông Tin trường Đại học Mở thành phố Hồ Chí Minh",
-            "active": null,
-            "image": "https://res.cloudinary.com/dndakokcz/image/upload/v1716648743/nrk46d6vwzsflvtd0iih.jpg",
-            "slots": 60,
-            "close": null,
-            "file": null
-        },
-        {
-            "id": 6,
-            "name": "Kì 3",
-            "description": "Kì 3 năm 2024",
-            "yearStudy": "2024"
-        },
-        {
-            "id": 3,
-            "name": "Điều 3",
-            "description": "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội."
-        },
-        {
-            "id": 12,
-            "dateRegister": 1718308618000,
-            "rollup": true,
-            "proofJoining": "proof1",
-            "note": "note1",
-            "accept": false,
-            "file": null
-        }
-    ],
-    [
-        {
-            "id": 8,
-            "name": "Chuyên đề Tiny Machine Learning",
-            "startDate": 1717990200000,
-            "endDate": 1718076600000,
-            "description": "Tiny Machine Learning được tổ chức bởi khoa Công Nghệ Thông Tin",
-            "active": null,
-            "image": "https://res.cloudinary.com/dndakokcz/image/upload/v1716648812/yhxzwbkqbhilw8uylbov.jpg",
-            "slots": 60,
-            "close": null,
-            "file": null
-        },
-        {
-            "id": 6,
-            "name": "Kì 3",
-            "description": "Kì 3 năm 2024",
-            "yearStudy": "2024"
-        },
-        {
-            "id": 3,
-            "name": "Điều 3",
-            "description": "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội."
-        },
-        {
-            "id": 10,
-            "dateRegister": 1718280541000,
-            "rollup": true,
-            "proofJoining": "proof1",
-            "note": "note1",
-            "accept": false,
-            "file": null
-        }
-    ]
-]
-
-const totalScore = {
-    "termScores": [
-        {
-            "termId": {
-                "id": 3,
-                "name": "Điều 3",
-                "description": "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội."
-            },
-            "totalScore": 20
-        },
-        {
-            "termId": {
-                "id": 1,
-                "name": "Điều 1",
-                "description": "Đánh giá về ý thức và kết quả tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống các tệ nạn xã hội."
-            },
-            "totalScore": 15
-        }
-    ],
-    "overallTotalScore": 35.0
-};
-
-const ScoreChart = () => {
-    const termScores = totalScore.termScores;
-    const labels = termScores.map(termScore => termScore.termId.name);
-    const dataValues = termScores.map(termScore => termScore.totalScore);
-
-    const barChartOptions = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Total Score per Term',
-            align: 'center'
-        },
-        xaxis: {
-            categories: labels
-        },
-        series: [{
-            name: 'Total Score',
-            data: dataValues
-        }]
-    };
-
-    const doughnutChartOptions = {
-        chart: {
-            type: 'donut'
-        },
-        title: {
-            text: 'Total Score per Term',
-            align: 'center'
-        },
-        labels: labels,
-        series: dataValues
-    };
-
-    return { barChartOptions, doughnutChartOptions };
-}
-
-const determineAchievement = (totalScore) => {
-    if (totalScore >= 90) {
-        return "Xuất sắc";
-    } else if (totalScore >= 80) {
-        return "Giỏi";
-    } else if (totalScore >= 70) {
-        return "Khá";
-    } else if (totalScore >= 60) {
-        return "Trung bình";
-    } else if (totalScore >= 50) {
-        return "Yếu";
-    } else {
-        return "Kém";
-    }
-};
-
-const averageScoreByClass = [
-    {
-        "studentCount": 1,
-        "classId": 1,
-        "className": "DH20CS01",
-        "averageScore": 0.0
-    },
-    {
-        "studentCount": 1,
-        "classId": 2,
-        "className": "DH20CS02",
-        "averageScore": 0.0
-    },
-    {
-        "studentCount": 1,
-        "classId": 3,
-        "className": "DH21CS01",
-        "averageScore": 20.0
-    },
-    {
-        "studentCount": 2,
-        "classId": 4,
-        "className": "DH21CS02",
-        "averageScore": 7.5
-    }
-];
-
-const csvData = averageScoreByClass.map(cls => ({
-    "Class Name": cls.className,
-    "Average Score": cls.averageScore
-}));
-
-const exportPDF = () => {
-    const input = document.getElementById('chart-container');
-    html2canvas(input).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'PNG', 0, 0);
-        pdf.save("average_scores.pdf");
-    });
-};
-
-const achievement = determineAchievement(totalScore.overallTotalScore);
-
 const StudentAchievement = () => {
-    const { barChartOptions, doughnutChartOptions } = ScoreChart();
     const [showStatistics, setShowStatistics] = useState(false);
+    const [activityJoin, setActivityJoin] = useState([]);
+    const [semesters, setSemesters] = useState([]);
+    const [idS, setIdS] = useState(null);
+    const [year, setYear] = useState(null);
+    const [student, setStudent] = useState([]);
+    const { studentId } = useParams();
+    const { id } = useParams();
+
+
+
+    const averageScoreByClass = [
+        {
+            "studentCount": 1,
+            "classId": 1,
+            "className": "DH20CS01",
+            "averageScore": 0.0
+        },
+        {
+            "studentCount": 1,
+            "classId": 2,
+            "className": "DH20CS02",
+            "averageScore": 0.0
+        },
+        {
+            "studentCount": 1,
+            "classId": 3,
+            "className": "DH21CS01",
+            "averageScore": 20.0
+        },
+        {
+            "studentCount": 2,
+            "classId": 4,
+            "className": "DH21CS02",
+            "averageScore": 7.5
+        }
+    ];
+
+    const csvData = averageScoreByClass.map(cls => ({
+        "Class Name": cls.className,
+        "Average Score": cls.averageScore
+    }));
+
+
+
+    useEffect(() => {
+        loadSemesters();
+    }, []);
+
+    const loadSemesters = async () => {
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['semesters']);
+            setSemesters(res.data);
+        } catch (ex) {
+            console.error(ex);
+        }
+    };
+
+    const loadStudent = async () => {
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['getStudentById'](studentId));
+            setStudent(res.data);
+        } catch (ex) {
+            console.error(ex);
+        }
+    };
+
+    useEffect(() => {
+        loadStudent();
+    }, [studentId]);
+
+    const loadStudentActivityJoined = async (semesterId, yearStudy) => {
+        const params = {};
+
+        if (yearStudy) {
+            params.yearStudy = yearStudy;
+            params.studentId = studentId;
+        } else if (semesterId) {
+            params.semesterId = semesterId;
+            params.studentId = studentId;
+        }
+
+        console.log("Request params:", params);
+
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['joinedActivities'], { params });
+
+            if (Array.isArray(res.data)) {
+                setActivityJoin(res.data);
+            } else {
+                setActivityJoin([]);
+            }
+        } catch (ex) {
+            console.error(ex);
+            setActivityJoin([]);
+        }
+    };
+
+    useEffect(() => {
+        if (idS || year) {
+            loadStudentActivityJoined(idS, year);
+        }
+    }, [idS, year]);
+
+    const handleFilter = (semesterId, yearStudy) => {
+        console.log("Selected Semester ID:", semesterId);
+        console.log("Selected Year:", yearStudy);
+        setIdS(semesterId);
+        setYear(yearStudy);
+
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 1000);
+        });
+    };
+
+    const [totalScore, setTotalScore] = useState([]);
+    const [termScores, setTermScores] = useState([]);
+    const [barChartOptions, setBarChartOptions] = useState({});
+    const [doughnutChartOptions, setDoughnutChartOptions] = useState({});
+
+    const loadTotalScore = async (semesterId, yearStudy) => {
+        const params = {
+            studentId: studentId
+        };
+
+        if (yearStudy) {
+            params.yearStudy = yearStudy;
+        } else if (semesterId) {
+            params.semesterId = semesterId;
+        }
+
+        console.log("Request params:", params);
+
+        try {
+            const response = await authApi().get(endpoints['totalScoreByTerm'], { params });
+            console.log(response.data)
+            setTotalScore(response.data);
+        } catch (ex) {
+            console.error(ex);
+        }
+    };
+
+
+    useEffect(() => {
+        if (idS || year) {
+            loadTotalScore(idS, year);
+        }
+    }, [idS, year]);
+
+    const determineAchievement = (totalScore) => {
+        if (totalScore >= 90) {
+            return "Xuất sắc";
+        } else if (totalScore >= 80) {
+            return "Giỏi";
+        } else if (totalScore >= 70) {
+            return "Khá";
+        } else if (totalScore >= 60) {
+            return "Trung bình";
+        } else if (totalScore >= 50) {
+            return "Yếu";
+        } else {
+            return "Kém";
+        }
+    };
+
+    useEffect(() => {
+        if (totalScore && totalScore.termScores) {
+            const labels = totalScore.termScores.map(termScore => termScore.termId.name);
+            const dataValues = totalScore.termScores.map(termScore => termScore.totalScore);
+
+            setBarChartOptions({
+                chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: 'Total Score per Term',
+                    align: 'center'
+                },
+                xaxis: {
+                    categories: labels
+                },
+                series: [{
+                    name: 'Total Score',
+                    data: dataValues
+                }]
+            });
+
+            setDoughnutChartOptions({
+                chart: {
+                    type: 'donut'
+                },
+                title: {
+                    text: 'Total Score per Term',
+                    align: 'center'
+                },
+                labels: labels,
+                series: dataValues
+            });
+        }
+    }, [totalScore]);
+
+    const achievement = determineAchievement(totalScore.overallTotalScore);
+
+    const exportCSV = async (semesterId, yearStudy) => {
+        const params = {};
+        if (yearStudy) {
+            params.yearStudy = yearStudy;
+        } else if (semesterId) {
+            params.semesterId = semesterId;
+        }
+
+        try {
+            const response = await authApi().get(endpoints['csvReport'](studentId), { params });
+            if (response.data) {
+                const csvData = response.data;
+                const csvBlob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+                const csvUrl = URL.createObjectURL(csvBlob);
+                const link = document.createElement('a');
+                link.href = csvUrl;
+                link.setAttribute('download', 'report.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } catch (ex) {
+            console.error(ex);
+        }
+    }
+
+    const exportPDF = async (semesterId, yearStudy) => {
+        const params = {};
+        if (yearStudy) {
+            params.yearStudy = yearStudy;
+        } else if (semesterId) {
+            params.semesterId = semesterId;
+        }
+
+        try {
+            const response = await authApi().get(endpoints['pdfReport'](studentId), { params, responseType: 'blob' });
+            if (response.data) {
+                const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                const link = document.createElement('a');
+                link.href = pdfUrl;
+                link.setAttribute('download', 'report.pdf');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } catch (ex) {
+            console.error(ex);
+        }
+    }
+
+
 
     return (
         <>
             <div className="bg-blue-100 text-gray-700 text-center py-4 rounded-lg shadow mb-6">
-                <h1 className="text-3xl font-bold">Danh sách các hoạt động của sinh viên gì đó</h1>
+                <h1 className="text-3xl font-bold">Danh sách các hoạt động của {student.lastname} {student.firstname}</h1>
+            </div>
+            <div className="container mx-auto mt-4 p-4">
+                <h1 className="text-2xl font-bold mb-4 text-center">Chọn học kỳ hoặc năm học</h1>
+                <FilterComponent onFilter={handleFilter} semesters={semesters} />
             </div>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg min-h-lvh z-0 mt-2">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
@@ -261,7 +298,7 @@ const StudentAchievement = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {activityJoin.map((element) => (
+                        {activityJoin && activityJoin.length > 0 && activityJoin.map((element) => (
                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={element[0].id}>
                                 <th
                                     scope="row"
@@ -274,7 +311,7 @@ const StudentAchievement = () => {
                                 <td className="px-6 py-4">{getDatetimeDetail(element[3].dateRegister)}</td>
                                 <td className="px-6 py-4">
                                     <Link
-                                        to="/assistant/class/1/student/1/join-activity/1/scores"
+                                        to={`/assistant/class/${id}/student/${student.id}/join-activity/${element[3].id}/scores`}
                                         className="text-decoration-none font-medium hover:text-rose-600"
                                     >
                                         Chi tiết điểm
@@ -310,23 +347,29 @@ const StudentAchievement = () => {
                                     &times;
                                 </button>
                                 <h2 className="text-2xl font-bold mb-4">Biểu đồ thống kê điểm theo từng điều</h2>
-                                <div className="mb-8">
-                                    <Chart
-                                        options={barChartOptions}
-                                        series={barChartOptions.series}
-                                        type="bar"
-                                        width="100%"
-                                        height="300"
-                                    />
-                                </div>
-                                <div className="mb-8">
-                                    <Chart
-                                        options={doughnutChartOptions}
-                                        series={doughnutChartOptions.series}
-                                        type="donut"
-                                        width="100%"
-                                        height="300"
-                                    />
+                                <div id="chart-container">
+                                    <div className="mb-8">
+                                        {barChartOptions && barChartOptions.series && (
+                                            <Chart
+                                                options={barChartOptions}
+                                                series={barChartOptions.series}
+                                                type="bar"
+                                                width="100%"
+                                                height="300"
+                                            />
+                                        )}
+                                    </div>
+                                    <div className="mb-8">
+                                        {doughnutChartOptions && doughnutChartOptions.series && (
+                                            <Chart
+                                                options={doughnutChartOptions}
+                                                series={doughnutChartOptions.series}
+                                                type="donut"
+                                                width="100%"
+                                                height="300"
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold">Tổng điểm: {totalScore.overallTotalScore}</h3>
@@ -336,25 +379,25 @@ const StudentAchievement = () => {
                     )}
                 </div>
             </div>
-
             <div className="container mx-auto px-4">
-            <div className="bg-white p-6 rounded-lg shadow-lg mt-6 space-y-4">
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">Xuất Danh Sách Điểm</h2>
-                <div className="flex space-x-4">
-                    <CSVLink data={csvData} filename={"average_scores.csv"}>
-                        <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300">
+                <div className="bg-white p-6 rounded-lg shadow-lg mt-6 space-y-4">
+                    <h2 className="text-2xl font-bold mb-4 text-gray-800">Xuất Danh Sách Điểm</h2>
+                    <div className="flex space-x-4">
+                        <button
+                            onClick={() => exportCSV(idS, year)}
+                            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300"
+                        >
                             Xuất điểm bằng file CSV
                         </button>
-                    </CSVLink>
-                    <button
-                        onClick={exportPDF}
-                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300"
-                    >
-                        Xuất điểm bằng file PDF
-                    </button>
+                        <button
+                            onClick={() => exportPDF(idS, year)}
+                            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300"
+                        >
+                            Xuất điểm bằng file PDF
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
         </>
     );
 }

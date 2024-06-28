@@ -1,79 +1,63 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { authApi, endpoints } from "../../../apis/API";
 import { getDatetimeDetail } from "../../../utils/Common";
 
 
 const ScoreDetail = () => {
+    const { joinActivityId } = useParams();
+    const [joinActivity, setJoinActivity] = useState([]);
 
-    const joinActivity = [
-        {
-            "id": 3,
-            "dateRegister": 1718942379000,
-            "rollup": true,
-            "proofJoining": "https://res.cloudinary.com/dndakokcz/image/upload/v1716640766/lflqzauyyavx8jqoenwl.jpg",
-            "note": "note1",
-            "accept": false,
-            "file": null
-        },
-        {
-            "id": 4,
-            "name": "TẬP HUẤN NCKH CHỦ ĐỀ \"PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC\"",
-            "startDate": 1715824800000,
-            "endDate": 1715911200000,
-            "description": "Hoạt động được tổ chức cho tất cả sinh viên trường Đại Học Mở thành phố Hồ Chí Minh",
-            "active": true,
-            "image": "https://res.cloudinary.com/dndakokcz/image/upload/v1716640766/lflqzauyyavx8jqoenwl.jpg",
-            "slots": 500,
-            "close": null,
-            "file": null
+    const loadJoinActivity = async () => {
+        try {
+            let res = await authApi().get(endpoints['getJoinActivityById'](joinActivityId));
+            if (Array.isArray(res.data)) {
+                setJoinActivity(res.data);
+            } else {
+                setJoinActivity([]);
+            }
+        } catch (ex) {
+            console.error(ex)
         }
-    ]
+    }
 
-    const joinActivityScore = [
-        [
-            {
-                "id": 5,
-                "scoreName": "diem1",
-                "description": "diem1",
-                "scoreValue": 5,
-                "numberOfScore": 500
-            },
-            1718947117000
-        ],
-        [
-            {
-                "id": 6,
-                "scoreName": "diem2",
-                "description": "diem2",
-                "scoreValue": 5,
-                "numberOfScore": 100
-            },
-            1718947117000
-        ],
-        [
-            {
-                "id": 7,
-                "scoreName": "diem3",
-                "description": "diemcong",
-                "scoreValue": 10,
-                "numberOfScore": 10
-            },
-            1718947118000
-        ]
-    ]
+
+    const [joinActivityScore, setJoinActivityScore] = useState([]);
+
+    useEffect(() => {
+        loadJoinActivity();
+        loadScore();
+    }, [joinActivityId])
+
+    const loadScore = async () => {
+        try {
+            let res = await authApi().get(endpoints['getScoreByJA'](joinActivityId));
+
+            if (Array.isArray(res.data)) {
+                setJoinActivityScore(res.data);
+            } else {
+                setJoinActivityScore([]);
+            }
+        } catch (ex) {
+            console.error(ex)
+        }
+    }
+
 
     const totalScore = joinActivityScore.reduce((total, score) => total + score[0].scoreValue, 0);
 
     return (
         <div className="container mx-auto p-4">
             <div className="bg-white shadow rounded-lg p-6 mb-4">
-                <h2 className="text-2xl font-bold mb-2">Hoạt động: {joinActivity[1].name}</h2>
+                <h2 className="text-2xl font-bold mb-2">Hoạt động: {joinActivity[1]?.name}</h2>
                 <p className="mb-2">{joinActivity.description}</p>
-                <p className="mb-2"><strong>Ngày bắt đầu:</strong> {getDatetimeDetail(joinActivity[1].startDate)}</p>
-                <p className="mb-2"><strong>Ngày kết thúc:</strong> {getDatetimeDetail(joinActivity[1].endDate)}</p>
-                <p className="mb-2"><strong>Ngày đăng ký:</strong> {getDatetimeDetail(joinActivity[0].dateRegister)}</p>
+                <p className="mb-2"><strong>Ngày bắt đầu:</strong> {getDatetimeDetail(joinActivity[1]?.startDate)}</p>
+                <p className="mb-2"><strong>Ngày kết thúc:</strong> {getDatetimeDetail(joinActivity[1]?.endDate)}</p>
+                <p className="mb-2"><strong>Ngày đăng ký:</strong> {getDatetimeDetail(joinActivity[0]?.dateRegister)}</p>
                 <p className="mb-2"><strong>Hình ảnh hoạt động:</strong></p>
-                <img className="w-full h-64 object-cover rounded-lg mb-4" src={joinActivity[1].image} alt={joinActivity[1].name} />
+                <img className="w-full h-64 object-cover rounded-lg mb-4" src={joinActivity[1]?.image} alt={joinActivity[1]?.name} />
                 <p className="mb-2"><strong>Hình ảnh chứng minh:</strong></p>
-                <img className="w-full h-64 object-cover rounded-lg" src={joinActivity[0].proofJoining}/>
+                <img className="w-full h-64 object-cover rounded-lg" src={joinActivity[0]?.proofJoining} />
             </div>
 
             <div className="bg-white shadow rounded-lg p-6">
