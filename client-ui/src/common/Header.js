@@ -125,7 +125,7 @@ function Header() {
                   <MenuItem>
                     {({ focus }) => (
                       <Link
-                        to="/assistant"
+                        to="/profile"
                         className={classNames(
                           focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
                           "block px-4 py-2 text-sm"
@@ -149,6 +149,36 @@ function Header() {
                             )}
                           >
                             Hoạt động đã đăng ký
+                          </Link>
+                        )}
+                      </MenuItem>
+                      <MenuItem>
+                        {({ focus }) => (
+                          <Link
+                            to="/joining"
+                            className={classNames(
+                              focus
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm"
+                            )}
+                          >
+                            Hoạt động đang tham gia
+                          </Link>
+                        )}
+                      </MenuItem>
+                      <MenuItem>
+                        {({ focus }) => (
+                          <Link
+                            to="/missing-report"
+                            className={classNames(
+                              focus
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700",
+                              "block px-4 py-2 text-sm"
+                            )}
+                          >
+                            Danh sách báo thiếu
                           </Link>
                         )}
                       </MenuItem>

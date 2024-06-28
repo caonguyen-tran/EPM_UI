@@ -1,21 +1,23 @@
 import { FaHeart } from "react-icons/fa6";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaEllipsisH, FaShare } from "react-icons/fa";
-import {
-  convertTimestampToDatetime
-} from "../../utils/Common";
+import { convertTimestampToDatetime } from "../../utils/Common";
 import { useContext, useEffect, useState } from "react";
 import API, { authApi, endpoints } from "../../apis/API";
 import ContentLoading from "../../common/ContentLoading";
 import Loading from "../../common/Loading";
 import { UserContext } from "../../context/Context";
 import Comment from "./Comment";
+import CommentLoading from "../../common/CommentLoading";
+import CommentForm from "./CommentForm";
 
 const ActivityDetail = () => {
   const { id } = useParams();
   const [detail, setDetail] = useState(null);
   const [isRegister, setIsRegister] = useState(null);
-  const [loading1, setLoading1] = useState(false)
+  const [loading1, setLoading1] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [comments, setComments] = useState([]);
   const currentUser = useContext(UserContext);
   const navigator = useNavigate();
 
@@ -59,6 +61,20 @@ const ActivityDetail = () => {
 
     fetchData();
   }, []);
+  const loadComments = async () => {
+    try {
+      setLoading(true);
+      let res = await API.get(endpoints["activityComments"](id));
+      setComments(res.data.result);
+      setLoading(false);
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+  useEffect(() => {
+    loadComments();
+  }, [id]);
+
   return (
     <div className="w-11/12 min-h-lvh bg-gray-200 m-auto flex flex-col justify-start items-center py-5 rounded-sm">
       {detail !== null ? (
@@ -216,27 +232,12 @@ const ActivityDetail = () => {
                     Có (20) bình luận
                   </h2>
                 </div>
-                <form class="mb-6">
-                  <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                    <label for="comment" class="sr-only">
-                      Your comment
-                    </label>
-                    <textarea
-                      id="comment"
-                      rows="6"
-                      class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-                      placeholder="Viết bình luận..."
-                      required
-                    ></textarea>
-                  </div>
-                  <button
-                    type="submit"
-                    class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 hover:bg-blue-800 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
-                  >
-                    Gửi
-                  </button>
-                </form>
-                <Comment id={id} />
+                <CommentForm id={id} loadComments={loadComments}/>
+                {loading ? (
+                  <CommentLoading />
+                ) : (
+                  comments.map((item) => <Comment item={item} />)
+                )}
               </div>
             </section>
           </div>

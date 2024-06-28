@@ -1,6 +1,6 @@
 import { FaHeart } from "react-icons/fa6";
 import { useContext, useEffect, useState } from "react";
-import { FaCommentDots, FaThumbsUp } from "react-icons/fa6";
+import { FaCommentDots } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import API, { endpoints } from "../../apis/API";
 import ContentLoading from "./../../common/ContentLoading";
