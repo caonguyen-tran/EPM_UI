@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import Chart from "react-apexcharts";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   convertTimestampToDatetime,
   getDatetimeDetail,
 } from "../../utils/Common";
+import { authApi, endpoints } from "../../apis/API";
+import { UserContext } from "../../context/Context";
+import ChartLoading from "../../common/ChartLoading";
+import TableLoading from "./../../common/TableLoading";
 
 const chartConfig1 = {
   type: "line",
@@ -50,8 +54,7 @@ const chartConfig1 = {
           fontWeight: 400,
         },
       },
-      categories: [
-      ],
+      categories: [],
     },
     yaxis: {
       labels: {
@@ -129,8 +132,7 @@ const chartConfig2 = {
           fontWeight: 400,
         },
       },
-      categories: [
-      ],
+      categories: [],
     },
     yaxis: {
       labels: {
@@ -164,117 +166,54 @@ const chartConfig2 = {
     },
   },
 };
-let data = [
-  [
-    {
-      id: 2,
-      dateConfirm: 1717990200000,
-    },
-    {
-      id: 9,
-      dateRegister: 1716648895000,
-      rollup: true,
-      proofJoining:
-        "https://res.cloudinary.com/dndakokcz/image/upload/v1716640766/lflqzauyyavx8jqoenwl.jpg",
-      note: null,
-      accept: true,
-      file: null,
-    },
-    {
-      id: 9,
-      scoreName: "Tham gia",
-      description: "Điểm tham gia",
-      scoreValue: 5,
-      numberOfScore: 60,
-    },
-    {
-      id: 8,
-      name: "Chuyên đề Tiny Machine Learning",
-      startDate: 1717990200000,
-      endDate: 1718076600000,
-      description:
-        "Tiny Machine Learning được tổ chức bởi khoa Công Nghệ Thông Tin",
-      active: true,
-      image:
-        "https://res.cloudinary.com/dndakokcz/image/upload/v1716648812/yhxzwbkqbhilw8uylbov.jpg",
-      slots: 60,
-      close: false,
-      file: null,
-    },
-  ],
-  [
-    {
-      id: 2,
-      dateConfirm: 1716648895000,
-    },
-    {
-      id: 26,
-      dateRegister: 1718819266000,
-      rollup: true,
-      proofJoining:
-        "https://res.cloudinary.com/dndakokcz/image/upload/v1718913910/wevsawa9eiy69ooy8vbi.jpg",
-      note: "user 3 send proof",
-      accept: true,
-      file: null,
-    },
-    {
-      id: 11,
-      scoreName: "Tham gia",
-      description: "Diem tham gia",
-      scoreValue: 5,
-      numberOfScore: 60,
-    },
-    {
-      id: 12,
-      name: "Báo cáo chuyên đề kỹ thuật phần mềm",
-      startDate: 1716688800000,
-      endDate: 1716656400000,
-      description:
-        "BÁO CÁO CHUYÊN ĐỀ VỀ KỸ THUẬT PHẦN MỀM\r\nBCV: Nguyễn Chí Cường - một Software Architect có uy tín từ Công ty Cadena.",
-      active: true,
-      image:
-        "https://res.cloudinary.com/dndakokcz/image/upload/v1718266872/m5rzfwum0e06hpmoncxc.jpg",
-      slots: 60,
-      close: false,
-      file: null,
-    },
-  ],
-];
+
 const Joined = () => {
   const [score, setScore] = useState(0);
-
-  const getObject = () => {
+  const [result, setResult] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [semester, setSemester] = useState(6);
+  const getObject = (scores) => {
     let obj = {};
-    let sum = 0
-    data.forEach((d) => {
+    let sum = 0;
+    scores.forEach((d) => {
       let tmp = convertTimestampToDatetime(d[0].dateConfirm).getMonth() + 1;
 
       if (obj[tmp]) {
         obj[tmp]["countMonth"]++;
-        obj[tmp]['sumScore']+=d[2].scoreValue;
+        obj[tmp]["sumScore"] += d[2].scoreValue;
       } else {
-        obj[tmp] = {"countMonth" : 1, "sumScore": d[2].scoreValue};
+        obj[tmp] = { countMonth: 1, sumScore: d[2].scoreValue };
       }
 
       sum += d[2].scoreValue;
     });
-    setScore(sum)
+    setScore(sum);
     return obj;
   };
 
   const fillArray = (obj) => {
     let arr1 = Object.keys(obj).map((key) => key);
     let arr2 = Object.keys(obj).map((key) => obj[key]["countMonth"]);
-    let arr3 = Object.keys(obj).map((key) => obj[key]['sumScore'])
+    let arr3 = Object.keys(obj).map((key) => obj[key]["sumScore"]);
     chartConfig1.series[0].data = arr2;
+    chartConfig2.series[0].data = arr3;
     chartConfig1.options.xaxis.categories = arr1;
     chartConfig2.options.xaxis.categories = arr1;
-    chartConfig2.series[0].data = arr3;
   };
-
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      let res = await authApi().get(endpoints["scoreStudentResult"](semester));
+      setResult(res.data.result);
+      fillArray(getObject(res.data.result));
+      setLoading(false);
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
   useEffect(() => {
-    fillArray(getObject());
-  }, []);
+    fetchData();
+  }, [semester]);
 
   return (
     <div className="min-h-lvh">
@@ -291,7 +230,7 @@ const Joined = () => {
                 Hoạt động đã tham gia
               </p>
               <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {data.length}
+                {loading ? "..." : result.length}
               </p>
             </div>
           </div>
@@ -312,7 +251,7 @@ const Joined = () => {
                 Điểm
               </p>
               <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {score}
+                {loading ? "..." : score}
               </p>
             </div>
           </div>
@@ -357,85 +296,101 @@ const Joined = () => {
         </div>
       </div>
       <div className="w-full flex justify-around">
-        <div class="w-5/12 min-h-80 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <Link href="#" className="no-underline">
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Hoạt động đã tham gia theo tháng
-            </h5>
-          </Link>
-          <div className="h-full w-full">
-            <Chart {...chartConfig1} />
+        {loading ? (
+          <ChartLoading />
+        ) : (
+          <div class="w-5/12 min-h-80 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <Link href="#" className="no-underline">
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Hoạt động đã tham gia theo tháng
+              </h5>
+            </Link>
+            <div className="h-full w-full">
+              <Chart {...chartConfig1} />
+            </div>
           </div>
-        </div>
-        <div class="w-5/12 min-h-80 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <Link href="#" className="no-underline">
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Điểm rèn luyện theo tháng
-            </h5>
-          </Link>
-          <div className="h-full w-full">
-            <Chart {...chartConfig2} />
+        )}
+        {loading ? (
+          <ChartLoading />
+        ) : (
+          <div class="w-5/12 min-h-80 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <Link href="#" className="no-underline">
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Điểm rèn luyện theo tháng
+              </h5>
+            </Link>
+            <div className="h-full w-full">
+              <Chart {...chartConfig2} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="mt-5">
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg min-h-lvh z-0 mt-2">
-          <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
-            <thead class="text-xs text-white uppercase bg-stone-700">
-              <tr>
-                <th scope="col" class="px-6 py-3">
-                  ID
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Tên hoạt động
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Ngày xác nhận
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Ngày đăng ký
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Bằng chứng tham gia
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Ghi chú
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Tên điểm
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Điểm
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((element) => (
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                  >
-                    {element[0].id}
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg min-h-96 z-0 mt-2">
+          {loading ? (
+            <TableLoading />
+          ) : (
+            <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
+              <thead class="text-xs text-white uppercase bg-stone-700">
+                <tr>
+                  <th scope="col" class="px-6 py-3">
+                    ID
                   </th>
-                  <td class="px-6 py-4">{element[3].name}</td>
-                  <td class="px-6 py-4">
-                    {getDatetimeDetail(element[0].dateConfirm)}
-                  </td>
-                  <td class="px-6 py-4">
-                    {getDatetimeDetail(element[1].dateRegister)}
-                  </td>
-                  <td class="px-6 py-4">
-                    <img alt="proof" src={element[1].proofJoining} className="max-h-40 max-w-56"/>
-                  </td>
-                  <td class="px-6 py-4 text-center">{element[1].note}</td>
-                  <td class="px-6 py-4">{element[2].scoreName}</td>
-                  <td class="px-6 py-4">{element[2].scoreValue}</td>
+                  <th scope="col" class="px-6 py-3">
+                    Tên hoạt động
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Ngày xác nhận
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Ngày đăng ký
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Bằng chứng tham gia
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Ghi chú
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Tên điểm
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Điểm
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {result.map((element) => (
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th
+                      scope="row"
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    >
+                      {element[0].id}
+                    </th>
+                    <td class="px-6 py-4">{element[3].name}</td>
+                    <td class="px-6 py-4">
+                      {getDatetimeDetail(element[0].dateConfirm)}
+                    </td>
+                    <td class="px-6 py-4">
+                      {getDatetimeDetail(element[1].dateRegister)}
+                    </td>
+                    <td class="px-6 py-4">
+                      <img
+                        alt="proof"
+                        src={element[1].proofJoining}
+                        className="max-h-40 max-w-56"
+                      />
+                    </td>
+                    <td class="px-6 py-4 text-center">{element[1].note}</td>
+                    <td class="px-6 py-4">{element[2].scoreName}</td>
+                    <td class="px-6 py-4">{element[2].scoreValue}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
