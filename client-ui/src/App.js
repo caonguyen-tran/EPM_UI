@@ -88,13 +88,13 @@ function App() {
                     element={<MissingReportDetail />}
                   />
                   <Route path="class" element={<Class />} />
-                  <Route path="class/1" element={<StudentList />} />
+                  <Route path="class/:id" element={<StudentList />} />
                   <Route
-                    path="class/1/student/1"
+                    path="class/:id/student/:studentId"
                     element={<StudentAchievement />}
                   />
                   <Route
-                    path="class/1/student/1/join-activity/1/scores"
+                    path="class/:id/student/:studentId/join-activity/:joinActivityId/scores"
                     element={<ScoreDetail />}
                   />
                 </Route>

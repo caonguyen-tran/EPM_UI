@@ -1,152 +1,75 @@
+import { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import { Link } from "react-router-dom";
+import { authApi, endpoints } from '../../apis/API';
+import FilterComponent from '../../common/FilterComponent';
 
 const Class = () => {
-    const classes = [
-        [
-            {
-                "id": 1,
-                "name": "DH20CS01"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 2,
-                "name": "DH20CS02"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 3,
-                "name": "DH21CS01"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 4,
-                "name": "DH21CS02"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 5,
-                "name": "DH21IT01"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 6,
-                "name": "DH21IT02"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 7,
-                "name": "DH22CS01"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 8,
-                "name": "DH22CS02"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 9,
-                "name": "DH22IT01"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ],
-        [
-            {
-                "id": 10,
-                "name": "DH22IT02"
-            },
-            {
-                "id": 1,
-                "name": "Công nghệ thông tin",
-                "createdDate": 844189200000
-            }
-        ]
-    ]
 
-    const averageScoreByClass = [
-        {
-            "studentCount": 1,
-            "classId": 1,
-            "className": "DH20CS01",
-            "averageScore": 100.0
-        },
-        {
-            "studentCount": 1,
-            "classId": 2,
-            "className": "DH20CS02",
-            "averageScore": 55.0
-        },
-        {
-            "studentCount": 1,
-            "classId": 3,
-            "className": "DH21CS01",
-            "averageScore": 20.0
-        },
-        {
-            "studentCount": 2,
-            "classId": 4,
-            "className": "DH21CS02",
-            "averageScore": 7.5
-        },
-        {
-            "studentCount": 10,
-            "classId": 6,
-            "className": "DH21CS02",
-            "averageScore": 78.0
+    const [semesters, setSemesters] = useState([]);
+    const [id, setId] = useState(null);
+    const [year, setYear] = useState(null);
+    const [averageScoreByClass, setAverageScoreByClass] = useState([]);
+
+    
+    useEffect(() => {
+        loadSemesters();
+    }, []);
+
+    const loadSemesters = async () => {
+        try {
+            const auth = await authApi();
+            const res = await auth.get(endpoints['semesters']);
+            setSemesters(res.data);
+        } catch (ex) {
+            console.error(ex);
         }
-    ];
+    };
+
+    const loadAverageScoreByClass = async (semesterId, yearStudy) => {
+        const params = {};
+
+        if (yearStudy) {
+            params.yearStudy = yearStudy;
+        } else if (semesterId) {
+            params.semesterId = semesterId;
+        }
+
+        console.log("Request params:", params);
+
+        try {
+            const res = await authApi().get(endpoints['averageScoreByClass'], { params });
+
+            if (Array.isArray(res.data)) {
+                setAverageScoreByClass(res.data);
+            } else {
+                setAverageScoreByClass([]);
+            }
+            console.log(res.data)
+        } catch (ex) {
+            console.error(ex);
+            setAverageScoreByClass([]);
+        }
+    };
+
+    useEffect(() => {
+        if (id || year) {
+            loadAverageScoreByClass(id, year);
+        }
+    }, [id, year]);
+
+    const handleFilter = (semesterId, yearStudy) => {
+        console.log("Selected Semester ID:", semesterId);
+        console.log("Selected Year:", yearStudy);
+        setId(semesterId);
+        setYear(yearStudy);
+
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 1000);
+        });
+    };
 
     const determineAchievement = (totalScore) => {
         if (totalScore >= 90) {
@@ -163,6 +86,21 @@ const Class = () => {
             return "Kém";
         }
     };
+
+    const [classes, setClasses] = useState([]);
+
+    useEffect(() => {
+        loadClasses();
+    }, [])
+
+    const loadClasses = async () => {
+        try {
+            let res = await authApi().get(endpoints['classes']);
+            setClasses(res.data);
+        } catch (ex) {
+            console.error(ex)
+        }
+    }
 
     const labels = averageScoreByClass.map(cls => cls.className);
     const scores = averageScoreByClass.map(cls => cls.averageScore);
@@ -230,7 +168,7 @@ const Class = () => {
                                 </td>
                                 <td class="px-6 py-4">
                                     <Link
-                                        to="/assistant/class/1"
+                                        to={`/assistant/class/${element[0].id}`}
                                         href="#"
                                         class="text-decoration-none font-medium hover:text-rose-600"
                                     >
@@ -241,6 +179,11 @@ const Class = () => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            <div className="container mx-auto mt-4 p-4">
+                <h1 className="text-2xl font-bold mb-4 text-center">Chọn học kỳ hoặc năm học</h1>
+                <FilterComponent onFilter={handleFilter} semesters={semesters} />
             </div>
 
             <div className="container mx-auto px-4">

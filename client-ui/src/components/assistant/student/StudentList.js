@@ -1,80 +1,42 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { authApi, endpoints } from "../../../apis/API";
 import { getDatetimeDetail } from "../../../utils/Common";
 
 const StudentList = () => {
-    const classes = "DH21CS01";
-    const students = [
-        [
-            {
-                "id": 1,
-                "firstname": "Nhân",
-                "lastname": "Tô Trọng",
-                "gender": "Nam",
-                "dayOfBirth": 1063731600000,
-                "phoneNumber": "0378461282",
-                "address": "992 Phạm Văn Đồng, phường 8, quận Gò Vấp",
-                "email": "nguyenvana@example.com"
-            },
-            1
-        ],
-        [
-            {
-                "id": 2,
-                "firstname": "Nguyên",
-                "lastname": "Trần Cao",
-                "gender": "Nam",
-                "dayOfBirth": 1068397200000,
-                "phoneNumber": "0374812888",
-                "address": "153/35 Lê Văn Thọ, phường 8, quận Gò Vấp",
-                "email": "tranthib@example.com"
-            },
-            4
-        ],
-        [
-            {
-                "id": 3,
-                "firstname": "Linh",
-                "lastname": "Phạm Thanh",
-                "gender": "Nữ",
-                "dayOfBirth": 1015866000000,
-                "phoneNumber": "0379847287",
-                "address": "89/2 Hoàng Minh Giám, phường 6, quận Bình Thạnh",
-                "email": ""
-            },
-            5
-        ],
-        [
-            {
-                "id": 4,
-                "firstname": "Lâm",
-                "lastname": "Hoàng Anh",
-                "gender": "Nam",
-                "dayOfBirth": 1020531600000,
-                "phoneNumber": "0374827238",
-                "address": "324 Lê Đức Thọ, phường 11, quận Gò Vấp",
-                "email": ""
-            },
-            6
-        ],
-        [
-            {
-                "id": 6,
-                "firstname": "Nguyên",
-                "lastname": "Nguyễn Cao",
-                "gender": "Nam",
-                "dayOfBirth": 1068310800000,
-                "phoneNumber": "0836824662",
-                "address": "21 Phan Văn Trị, phường 1, quận Bình Thạnh",
-                "email": "2151013063nhan@ou.edu.vn"
-            },
-            20
-        ]
-    ]
+    const { id } = useParams();
+
+    const [classes, setClasses] = useState([]);
+
+    const loadClass = async () => {
+        try {
+            let res = await authApi().get(endpoints['getClassById'](id));
+            setClasses(res.data);
+        } catch (ex){
+            console.error(ex)
+        }
+    }
+
+    useEffect(()=>{
+        loadClass();
+        loadStudents();
+    }, [id])
+
+    const [students, setStudents] = useState([]);
+
+    const loadStudents = async () => {
+        try {
+            let res = await authApi().get(endpoints['getStudentsByClass'](id));
+            setStudents(res.data);
+        } catch (ex){
+            console.error(ex)
+        }
+    }
 
     return (
         <>
             <div className="bg-blue-100 text-gray-700 text-center py-4 rounded-lg shadow mb-6">
-                <h1 className="text-3xl font-bold">Danh sách sinh viên lớp {classes}</h1>
+                <h1 className="text-3xl font-bold">Danh sách sinh viên lớp {classes.name}</h1>
             </div>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg min-h-lvh z-0 mt-2">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
