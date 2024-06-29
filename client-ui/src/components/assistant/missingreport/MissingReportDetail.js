@@ -17,6 +17,7 @@ const MissingReportDetail = () => {
         try {
             let res = await authApi().get(endpoints['missingReportDetail'](id));
             setMissingReport(res.data);
+            console.log(res.data);
         } catch (ex) {
             console.error(ex);
         }
@@ -26,20 +27,71 @@ const MissingReportDetail = () => {
         let datetime = new Date(timestamp);
         return `${datetime.getDate()}/${datetime.getMonth() + 1}/${datetime.getFullYear()} - ${datetime.getHours()}:${datetime.getMinutes()}`;
     };
-    
-    const [payload, setPayload] = useState({
-        joinId:'',
-        activityId:''
-    })
+
+    const [joinId, setJoinId] = useState();
+
+    useEffect(() => {
+        if (missingReport?.length > 1) {
+            const getJoinId = async () => {
+                try {
+                    const res = await authApi().get(endpoints['getJAId'](missingReport[5]?.id, missingReport[1]?.id));
+                    console.log(res.data.id)
+                    setJoinId(res.data.id);
+                } catch (ex) {
+                    console.error(ex);
+                }
+            };
+
+            getJoinId();
+        }
+    }, [missingReport]);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
 
 
     const accept = async () => {
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
 
+        try {
+            const payload = {
+                joinId: joinId,
+                activityId: missingReport[1]?.id
+            };
 
+            const response = await authApi().post(endpoints['acceptScoreStudent'], payload);
+
+            if (response.status === 201) {
+                setSuccess(true);
+                alert("Accepted successfully!")
+            }
+        } catch (error) {
+            setError('Có lỗi xảy ra khi gửi yêu cầu.');
+            console.error('Error:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const reject = () => {
-        // Handle reject logic here
+    const reject = async () => {
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            const response = await authApi().post(endpoints['rejectMr'](id));
+
+            if (response.status === 200) {
+                setSuccess(true);
+                alert("Rejected successfully!");
+            }
+        } catch (error) {
+            setError('Có lỗi xảy ra khi gửi yêu cầu.');
+            console.error('Error:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (!Array.isArray(missingReport) || missingReport.length === 0) {
@@ -108,18 +160,22 @@ const MissingReportDetail = () => {
                     />
                 </div>
             </div>
-            <button
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
-                onClick={accept}
-            >
-                Chấp nhận báo thiếu
-            </button>
-            <button
-                className="bg-white border border-gray-300 hover:border-gray-400 text-red-800 font-bold py-2 px-4 rounded inline-flex items-center"
-                onClick={reject}
-            >
-                Từ chối báo thiếu
-            </button>
+            <div className="mb-4">
+                {error && <p>{error}</p>}
+                {success && <p>Accepted successfully!</p>}
+                <button onClick={accept} disabled={loading || !joinId}
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                    {loading ? 'Đang xử lý...' : 'Chấp nhận báo thiếu'}
+                </button>
+            </div>
+            <div>
+                {error && <p>{error}</p>}
+                {success && <p>Rejected successfully!</p>}
+                <button onClick={reject} disabled={loading || !id}
+                    className="bg-white border border-gray-300 hover:border-gray-400 text-red-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                    {loading ? 'Đang xử lý...' : 'Từ chối báo thiếu'}
+                </button>
+            </div>
         </div>
     );
 };
