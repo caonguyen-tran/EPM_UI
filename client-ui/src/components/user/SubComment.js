@@ -1,3 +1,5 @@
+import RelativeTime from "../../utils/Relative";
+
 const SubComment = ({ item }) => {
   return (
     <>
@@ -11,9 +13,7 @@ const SubComment = ({ item }) => {
         <div class="flex-col mt-1">
           <div class="flex items-center flex-1 px-4 font-bold leading-tight">
             {item.userResponse.username}
-            <span class="ml-2 text-xs font-normal text-gray-500">
-              5 days ago
-            </span>
+            <RelativeTime date={item.createdDate} classNameProps='ml-2 text-xs font-normal text-gray-500'/>
           </div>
           <div class="flex-1 px-2 ml-2 text-sm font-medium leading-loose text-gray-600">
             {item.content}

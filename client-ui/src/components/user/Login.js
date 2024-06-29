@@ -11,6 +11,7 @@ function Login() {
   const dispatch = useContext(DispatchContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("")
 
   const [user, setUser] = useState({
     username: "",
@@ -45,7 +46,7 @@ function Login() {
       }, 200);
     } else {
       setLoading(false);
-      alert("Loi dang nhap");
+      setError("Tài khoản hoặc mật khẩu không hợp lệ!")
     }
   };
 

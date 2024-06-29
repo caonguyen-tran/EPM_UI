@@ -12,7 +12,6 @@ const Joining = () => {
     try {
       setLoading(true);
       let res = await authApi().get(endpoints["getJoiningActivity"](6));
-      console.log(res.data.result);
       setJoining(res.data.result);
       setLoading(false);
     } catch (ex) {
@@ -28,7 +27,7 @@ const Joining = () => {
     <>
       <figure class="w-full mx-auto text-center py-2 mt-2">
         <div className="w-full mb-5">
-          <h1 class="w-full text-left mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+          <h1 class="w-full text-left mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-5xl dark:text-white">
             Danh sách các{" "}
             <Link to="/" class="text-blue-600 dark:text-blue-500">
               hoạt động

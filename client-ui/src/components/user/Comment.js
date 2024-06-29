@@ -3,6 +3,7 @@ import { getDatetimeDetail } from "../../utils/Common";
 import API, { endpoints } from "../../apis/API";
 import Loading from "../../common/Loading";
 import SubComment from "./SubComment";
+import RelativeTime from "../../utils/Relative";
 
 const Comment = ({ ...props }) => {
   const [show, setShow] = useState(false);
@@ -32,9 +33,7 @@ const Comment = ({ ...props }) => {
         <div class="flex-col mt-1">
           <div class="flex items-center flex-1 px-4 font-bold leading-tight">
             {props.item.userResponse.username}
-            <span class="ml-2 text-xs font-normal text-gray-500">
-              {getDatetimeDetail(props.item.createdDate)}
-            </span>
+            <RelativeTime date={props.item.createdDate} classNameProps='ml-2 text-xs font-normal text-gray-500'/>
           </div>
           <div class="flex-1 px-2 ml-2 text-sm font-medium leading-loose text-gray-600">
             {props.item.content}

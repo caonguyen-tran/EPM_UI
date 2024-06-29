@@ -30,6 +30,8 @@ export const endpoints = {
     'checkLike': 'api/likes/exists',
     'createMissingReport': 'api/missing-report/create',
     'missingReportOfStudent': 'api/missing-report/get-missing-report-of-student/',
+    'getListMissingReportByUser' : (semesterId) => `api/missing-report/personal/${semesterId}`,
+    'getExistMissingReport': (activityId) => `api/missing-report/get-exist-report/${activityId}`,
     'missingReportByFaculty': 'api/report/',
     'missingReportDetail': (mrId) => `api/missing-report/${mrId}`,
     'getMissingReport': 'api/missing-report/get-list',

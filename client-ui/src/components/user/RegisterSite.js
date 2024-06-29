@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { authApi, endpoints } from "../../apis/API";
 import TableLoading from "../../common/TableLoading";
 import Loading from "../../common/Loading";
-import ConfirmJoin from "../../common/ConfirmJoin";
+import JoinSubmit from "../../common/JoinSubmit";
 
 const RegisterSite = () => {
   const [register, setRegister] = useState([]);
@@ -41,14 +41,14 @@ const RegisterSite = () => {
     <>
       <figure class="w-full mx-auto text-center py-2 mt-2">
         <div className="w-full mb-5">
-          <h1 class="w-full text-left mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+          <h3 class="w-full text-left mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-5xl dark:text-white">
             Danh sách đăng ký tham gia{" "}
             <Link to="/" class="text-blue-600 dark:text-blue-500">hoạt động.</Link>
-          </h1>
+          </h3>
         </div>
         <div>
           {show ? (
-            <ConfirmJoin registerId={registerId} setShow={setShow} />
+            <JoinSubmit registerId={registerId} setShow={setShow} />
           ) : (
             <></>
           )}
