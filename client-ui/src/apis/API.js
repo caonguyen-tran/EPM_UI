@@ -55,7 +55,9 @@ export const endpoints = {
     'getClassById': (id) => `api/class/${id}`,
     'getStudentsByClass': (id) => `api/student/${id}`,
     'getStudentById': (id) => `api/student/student-detail/${id}`,
-    'getScoreByJA': (id) => `api/score-student/detail/${id}`
+    'getScoreByJA': (id) => `api/score-student/detail/${id}`,
+    'getJAId': (userId, activityId) => `api/join-activity/activity/${activityId}/user/${userId}`,
+    'rejectMr': (id) => `api/missing-report/reject/${id}`
 }
 
 export const authApi = () => {
