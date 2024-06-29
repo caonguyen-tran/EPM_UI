@@ -23,6 +23,7 @@ export const endpoints = {
     'getSubComments': (parentId) => `api/comments/get-child/${parentId}`,
     'rejectJoin': (joinId) => `api/join-activity/${joinId}`,
     'listJoinActivities': (activityId) => `api/join-activity/${activityId}`,
+    'getJoinActivityById': (id) => `api/join-activity/detail/${id}`,
     'submitRegister': "api/join-activity",
     'getJoiningActivity': (semesterId) => `api/join-activity/personal/${semesterId}`,
     'likeActivity': 'api/likes/like',
@@ -35,8 +36,8 @@ export const endpoints = {
     'missingReportByFaculty': 'api/report/',
     'missingReportDetail': (mrId) => `api/missing-report/${mrId}`,
     'getMissingReport': 'api/missing-report/get-list',
-    'pdfReport': (studentId) => `api/pdf/${studentId}`,
-    'csvReport': (studentId) => `api/csv/${studentId}`,
+    'pdfReport': (studentId) => `api/report/pdf/${studentId}`,
+    'csvReport': (studentId) => `api/report/csv/${studentId}`,
     'scoreByTerm': 'api/score/scores-by-term',
     'totalScoreByTerm': 'api/score/total-scores-by-term',
     'acceptScoreStudent': 'api/score-student/accept',
@@ -50,7 +51,15 @@ export const endpoints = {
     'personalRegister': 'api/register/personal-register',
     'semesters': 'api/semesters/',
     'terms': 'api/terms/',
-    'faculties': 'api/faculties/'
+    'faculties': 'api/faculties/',
+    'classes': 'api/class/',
+    'averageScoreByClass': 'api/score/average-score/classes',
+    'getClassById': (id) => `api/class/${id}`,
+    'getStudentsByClass': (id) => `api/student/${id}`,
+    'getStudentById': (id) => `api/student/student-detail/${id}`,
+    'getScoreByJA': (id) => `api/score-student/detail/${id}`,
+    'getJAId': (userId, activityId) => `api/join-activity/activity/${activityId}/user/${userId}`,
+    'rejectMr': (id) => `api/missing-report/reject/${id}`
 }
 
 export const authApi = () => {
